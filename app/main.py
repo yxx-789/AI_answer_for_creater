@@ -1,7 +1,13 @@
 """
 AI客服运营平台 - 主入口（完整版）
 """
+import sys
+import os
+# 把当前文件所在目录的上一级（也就是项目的根目录）强制加入到Python的搜索路径中
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+# 原来的代码保持不变，继续写在下面...
+from config.config import PLATFORM_NAME, VERSION, TRACES_DIR, BAD_CASES_DIR
 import streamlit as st
 import sys
 from pathlib import Path
