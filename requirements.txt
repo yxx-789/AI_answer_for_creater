@@ -1,0 +1,18 @@
+# AI客服运营平台 - 依赖清单
+
+# Web框架
+streamlit>=1.28.0
+
+# 数据处理
+pyyaml>=6.0
+pydantic>=2.0
+
+# HTTP客户端（必须使用 requests）
+requests>=2.31.0
+
+# 数据可视化
+plotly>=5.18
+pandas>=2.1
+
+# 其他工具
+python-dotenv>=1.0

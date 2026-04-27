@@ -1,0 +1,218 @@
+# 处罚Agent - 百灵AI客服
+# 职责：仅处理明确的账号处罚相关查询（封禁、禁言、限制发文、处罚申诉、黑名单、权限限制等）
+
+agent:
+  name: penalty_agent
+  version: 1.1.0
+  description: 处理账号处罚相关查询，使用大模型动态生成回复
+
+# 输入变量
+# - raw_query: 原始用户输入
+# - rewrite_query: 改写后的query
+# - user_list: 用户分层信息列表
+# - confirm_liveness_detection: 是否确认活体检测
+# - has_ban: 是否有封禁记录
+# - variable_data: API变量数据
+# - main_intention_to_human_count: 转人工次数
+# - user_id: 用户ID
+# - conversation_id: 会话ID
+
+# 输出变量
+# - status: resolved | unresolved | transfer
+# - final_answer: 最终回复
+# - penalty_message: 处罚消息（success/fail）
+# - penalty_type: 处罚类型
+# - penalty_data: 处罚数据
+# - penalty_reject_data: 拒绝数据
+
+nodes:
+  AGENT_START:
+    type: START
+    next_nodes:
+      - CODE_PENALTY_PARAMS_BUILD
+
+  CODE_PENALTY_PARAMS_BUILD:
+    type: CODE
+    config:
+      function_name: build_penalty_params
+      input_mapping:
+        raw_query: raw_query
+        rewrite_query: rewrite_query
+        user_list: user_list
+        confirm_liveness_detection: confirm_liveness_detection
+        has_ban: has_ban
+        variable_data: variable_data
+        main_intention_to_human_count: main_intention_to_human_count
+    next_nodes:
+      - IF_NEED_HUMAN_OR_LIVENESS
+    output_mapping:
+      json_params: penalty_agent_input
+
+  IF_NEED_HUMAN_OR_LIVENESS:
+    type: IF
+    config:
+      conditions:
+        - description: 活体检测场景
+          expression: confirm_liveness_detection == 1
+          target_node: MSG_LIVENESS_DETECTION
+        - description: 多次转人工且仍需人工
+          expression: main_intention_to_human_count >= 2
+          target_node: WORKFLOW_TRANSFER_HUMAN
+        - description: 其他处罚咨询
+          expression: 'true'
+          target_node: LLM_PENALTY_DYNAMIC_REPLY
+
+  LLM_PENALTY_DYNAMIC_REPLY:
+    type: LLM
+    config:
+      model_id: qwen3.5-27b
+      temperature: 0.2
+      max_tokens: 220
+      history_rounds: 0
+      system_prompt: |
+        你是百家号官方AI客服“小百”，专门处理账号处罚相关问题。
+        请根据用户问题和当前已知账号状态，生成准确、克制、非臆断的回复。
+
+        回复要求：
+        1. 仅基于已提供信息回答，不要虚构“经核查已确认违规”“已限制发文”等结论。
+        2. 如果当前信息不足以确认具体处罚原因，要明确说明“暂未获取到明确处罚详情”。
+        3. 若用户是在咨询账号封禁、禁言、限制发文、评论权限关闭、黑名单、处罚申诉等问题，请围绕：
+           - 建议查看站内信/处罚通知/违规记录
+           - 根据提示整改
+           - 如认为误判可申诉
+           - 如有具体提示可继续提供给客服分析
+        4. 如果账号状态信息显示“暂未发现异常”或无黑名单信息，不要输出已经确认处罚的结论。
+        5. 回复风格要像官方客服，简洁、友好、明确，控制在120字以内。
+        6. 不要输出JSON，不要分点过长，不要编造后台核查结果。
+      user_prompt_template: |
+        用户原始问题：{{raw_query}}
+        用户改写问题：{{rewrite_query}}
+        用户分层信息：{{user_list}}
+        账号状态变量：{{variable_data}}
+        是否确认活体检测：{{confirm_liveness_detection}}
+        是否已有处罚记录标记：{{has_ban}}
+
+        请生成最终回复：
+    next_nodes:
+      - CODE_WRAP_PENALTY_RESULT
+    output_mapping:
+      output: llm_penalty_answer
+
+  CODE_WRAP_PENALTY_RESULT:
+    type: CODE
+    config:
+      function_name: wrap_penalty_llm_result
+      input_mapping:
+        answer: llm_penalty_answer
+    next_nodes:
+      - CODE_PENALTY_OUTPUT_PARSE
+    output_mapping:
+      penalty_result: penalty_result
+
+  CODE_PENALTY_OUTPUT_PARSE:
+    type: CODE
+    config:
+      function_name: parse_penalty_output
+      input_mapping:
+        penalty_result: penalty_result
+    next_nodes:
+      - IF_PENALTY_RESULT
+    output_mapping:
+      message: penalty_message
+      type: penalty_type
+      data: penalty_data
+      reject_data: penalty_reject_data
+
+  IF_PENALTY_RESULT:
+    type: IF
+    config:
+      conditions:
+        - description: 反馈结果
+          expression: penalty_message == 'success' and penalty_type == 'feedback'
+          target_node: MSG_PENALTY_FEEDBACK
+        - description: 转人工
+          expression: penalty_message == 'success' and penalty_type == 'manual'
+          target_node: WORKFLOW_TRANSFER_HUMAN
+        - description: 拒绝转人工
+          expression: penalty_message == 'success' and penalty_type == 'manual_reject'
+          target_node: MSG_PENALTY_REJECT
+        - description: 非工时
+          expression: penalty_message == 'success' and penalty_type == 'manual_non_working'
+          target_node: LLM_NON_WORKING_REJECT
+        - description: 活体检测
+          expression: penalty_message == 'success' and penalty_type == 'liveness_detection'
+          target_node: MSG_LIVENESS_DETECTION
+        - description: 失败回退
+          expression: penalty_message == 'fail'
+          target_node: AGENT_END_UNRESOLVED
+
+  MSG_PENALTY_FEEDBACK:
+    type: MESSAGE
+    config:
+      template: '{{penalty_data}}'
+    next_nodes:
+      - AGENT_END_RESOLVED
+    output_mapping:
+      template_output: final_answer
+
+  MSG_PENALTY_REJECT:
+    type: MESSAGE
+    config:
+      template: '{{penalty_reject_data}}'
+    next_nodes:
+      - AGENT_END_RESOLVED
+    output_mapping:
+      template_output: final_answer
+
+  MSG_LIVENESS_DETECTION:
+    type: MESSAGE
+    config:
+      template: 为保障账号安全，请根据页面提示完成活体检测后再试；如多次失败，建议更换网络或设备后重试。
+    next_nodes:
+      - AGENT_END_RESOLVED
+    output_mapping:
+      template_output: final_answer
+
+  WORKFLOW_TRANSFER_HUMAN:
+    type: CODE
+    config:
+      function_name: transfer_to_human
+      input_mapping:
+        user_id: user_id
+        conversation_id: conversation_id
+    next_nodes:
+      - AGENT_END_TRANSFER
+    output_mapping:
+      transfer_message: final_answer
+
+  LLM_NON_WORKING_REJECT:
+    type: LLM
+    config:
+      model_id: qwen3.5-27b
+      temperature: 0.3
+      max_tokens: 100
+      history_rounds: 0
+      system_prompt: 你是百家号官方AI客服“小百”。当前是非工作时段，人工客服已休息。请友好地告知用户工作时间，并引导用户留言。回复不超过80字。
+      user_prompt_template: |
+        用户问题：{{rewrite_query}}
+        请生成非工作时段的引导回复：
+    next_nodes:
+      - AGENT_END_TRANSFER
+    output_mapping:
+      output: final_answer
+
+  AGENT_END_RESOLVED:
+    type: END
+    config:
+      status: resolved
+
+  AGENT_END_UNRESOLVED:
+    type: END
+    config:
+      status: unresolved
+      final_answer: ''
+
+  AGENT_END_TRANSFER:
+    type: END
+    config:
+      status: transfer

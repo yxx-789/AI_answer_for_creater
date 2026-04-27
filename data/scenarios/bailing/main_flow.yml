@@ -1,0 +1,1413 @@
+context_variables:
+  account_penalty_context:
+    default: '{}'
+    type: String
+  chat_history:
+    source: system
+    type: ArrayObject
+  classification_id:
+    default: ''
+    type: String
+  condition_desc_list:
+    default: '[]'
+    type: ArrayString
+  confirm_liveness_detection:
+    default: 0
+    type: Integer
+  conversation_id:
+    source: system
+    type: String
+  extra_prompt:
+    default: ''
+    type: String
+  fast_transfer:
+    default: 0
+    type: Integer
+  file_urls:
+    default: '[]'
+    source: user_input
+    type: ArrayString
+  final_answer:
+    default: ''
+    type: String
+  final_query:
+    default: ''
+    type: String
+  has_ban:
+    default: 0
+    type: Integer
+  high_risk_class_id:
+    default: ''
+    type: String
+  img_description:
+    default: ''
+    type: String
+  img_query:
+    default: ''
+    type: String
+  knowledge_list:
+    default: ''
+    type: String
+  knowledge_raw:
+    default: ''
+    type: String
+  knowledge_valid:
+    default: '0'
+    type: String
+  link_map:
+    default: '{}'
+    type: Object
+  main_intent_id:
+    default: ''
+    type: String
+  main_intention_continuity_count:
+    default: 0
+    type: Integer
+  main_intention_count_map:
+    default: '{}'
+    type: Object
+  main_intention_last_id:
+    default: ''
+    type: String
+  main_intention_no_parsed_count:
+    default: 0
+    type: Integer
+  main_intention_no_parsed_lately_count:
+    default: 0
+    type: Integer
+  main_intention_to_human_count:
+    default: 0
+    type: Integer
+  main_intention_to_human_lately_count:
+    default: 0
+    type: Integer
+  match_success:
+    default: 0
+    type: Integer
+  message_type:
+    default: text
+    type: String
+  no_img_query:
+    default: ''
+    type: String
+  penalty_data:
+    default: ''
+    type: String
+  penalty_message:
+    default: ''
+    type: String
+  penalty_reject_data:
+    default: ''
+    type: String
+  penalty_result:
+    default: '{}'
+    type: Object
+  penalty_type:
+    default: ''
+    type: String
+  question_category_ids:
+    default: ''
+    type: String
+  raw_query:
+    source: user_input
+    type: String
+  real_fast_transfer:
+    default: 0
+    type: Integer
+  real_question_category_ids:
+    default: ''
+    type: String
+  reject_data:
+    default: ''
+    type: String
+  rewrite_query:
+    default: ''
+    type: String
+  rewrite_query_with_info:
+    default: ''
+    type: String
+  rewrite_query_without_info:
+    default: ''
+    type: String
+  secondary_intent_id:
+    default: ''
+    type: String
+  semantic_complete:
+    default: '1'
+    type: String
+  talk_context:
+    default: '[]'
+    type: String
+  talk_context_parsed:
+    default: '[]'
+    type: ArrayObject
+  transfer_flag:
+    default: false
+    type: Boolean
+  updated_penalty_context:
+    default: '{}'
+    type: String
+  updated_talk_context:
+    default: '[]'
+    type: String
+  user_id:
+    source: system
+    type: String
+  user_info_list:
+    default: '[]'
+    type: ArrayString
+  user_list:
+    default: '[]'
+    type: ArrayString
+  variable_data:
+    default: '{}'
+    type: Object
+  raw_knowledge_results:
+    default: '[]'
+    type: ArrayObject
+  llm_input_context:
+    default: ''
+    type: String
+  gen_result_json:
+    default: '{}'
+    type: Object
+  clarify_search_query:
+    default: ''
+    type: String
+  clarify_knowledge_results:
+    default: '[]'
+    type: ArrayObject
+  search_topic_query:
+    default: ''
+    type: String
+  search_followup_query:
+    default: ''
+    type: String
+  kb_search_query:
+    default: ''
+    type: String
+  knowledge_indexes:
+    default: ''
+    type: String
+  material_id:
+    default: ''
+    type: String
+  transfer_params:
+    default: '{}'
+    type: Object
+  query_entities:
+    default: '{}'
+    type: String
+  entity_context:
+    default: '{}'
+    type: String
+  resolved_domain:
+    default: ''
+    type: String
+  slot_complete:
+    default: 1
+    type: Integer
+  clarify_type:
+    default: ''
+    type: String
+  missing_slots:
+    default: '[]'
+    type: String
+  route_type:
+    default: 'continue'
+    type: String
+  suggested_reply:
+    default: ''
+    type: String
+  reason:
+    default: ''
+    type: String
+  slot_check_result:
+    default: '{}'
+    type: String
+  chat_type:
+    default: ''
+    type: String
+  domain:
+    default: ''
+    type: String
+  issue_type:
+    default: ''
+    type: String
+  intent_action:
+    default: ''
+    type: String
+  is_vague_business:
+    default: 0
+    type: Integer
+
+metadata:
+  description: 百家号APP智能客服完整对话流程（实体槽位增强版）
+  knowledge_refs:
+    - shared/platform_rules
+    - bailing/bjh_app_faq
+  scene_id: bailing_main_flow
+  scene_name: 百灵AI客服主流程
+  version: '5.0'
+
+nodes:
+  START:
+    type: START
+    next_nodes:
+      - API_CHECK_CONDITION
+    config:
+      description: 入口节点，串行执行
+      parallel: false
+
+  API_CHECK_CONDITION:
+    type: API
+    config:
+      url: https://ufosdk.baidu.com/connector/checkCondition
+      method: POST
+      body_template:
+        conditionIds:
+          - 2296
+          - 2049
+          - 2031
+          - 2030
+          - 2027
+          - 2026
+          - 2025
+          - 1327
+        conversationId: '{{conversation_id}}'
+      timeout_sec: 5
+      mock_response:
+        code: 0
+        data:
+          conditionDescList:
+            - 非鼓励层
+            - 工时内
+            - 非黑名单
+    next_nodes:
+      - API_RESOLVE_VARIABLE
+    output_mapping:
+      condition_desc_list: data.conditionDescList
+
+  API_RESOLVE_VARIABLE:
+    type: API
+    config:
+      url: https://ufosdk.baidu.com/connector/resolveVariable
+      method: POST
+      body_template:
+        variableList:
+          - unapprovedCount
+          - userAccountStatusDesc
+          - blackReason
+          - suggestion
+        conversationId: '{{conversation_id}}'
+      timeout_sec: 5
+      mock_response:
+        code: 0
+        data:
+          userAccountStatusDesc: 暂未发现异常
+          blackReason: ''
+          unapprovedCount: '0'
+          suggestion: ''
+    next_nodes:
+      - CODE_USER_INFO_MERGE
+    output_mapping:
+      variable_data: data
+
+  CODE_USER_INFO_MERGE:
+    type: CODE
+    config:
+      function_name: merge_user_info
+      input_mapping:
+        condition_desc_list: condition_desc_list
+        variable_data: variable_data
+    next_nodes:
+      - MEM_READ_TALK
+    output_mapping:
+      user_list: user_list
+
+  MEM_READ_TALK:
+    type: MEMORY
+    config:
+      operation: read
+      variable: talk_context
+    next_nodes:
+      - CODE_TALK_CONTEXT_PARSE
+
+  CODE_TALK_CONTEXT_PARSE:
+    type: CODE
+    config:
+      function_name: parse_talk_context
+      input_mapping:
+        talk_context_str: talk_context
+    next_nodes:
+      - CODE_HUMAN_PARSE
+    output_mapping:
+      count_map: main_intention_count_map
+      last_id: main_intention_last_id
+      continuity_count: main_intention_continuity_count
+      parsed_array: talk_context_parsed
+
+  CODE_HUMAN_PARSE:
+    type: CODE
+    config:
+      function_name: parse_transfer_stats
+      input_mapping:
+        count_map: main_intention_count_map
+        talk_context_parsed: talk_context_parsed
+    next_nodes:
+      - CODE_UNPARSED_PARSE
+    output_mapping:
+      total_count: main_intention_to_human_count
+      recent_count: main_intention_to_human_lately_count
+
+  CODE_UNPARSED_PARSE:
+    type: CODE
+    config:
+      function_name: parse_unparsed_stats
+      input_mapping:
+        count_map: main_intention_count_map
+        talk_context_parsed: talk_context_parsed
+    next_nodes:
+      - MEM_READ_PENALTY
+    output_mapping:
+      total_count: main_intention_no_parsed_count
+      recent_count: main_intention_no_parsed_lately_count
+
+  MEM_READ_PENALTY:
+    type: MEMORY
+    config:
+      operation: read
+      variable: account_penalty_context
+    next_nodes:
+      - CODE_PENALTY_PARSE
+
+  CODE_PENALTY_PARSE:
+    type: CODE
+    config:
+      function_name: parse_penalty_context
+      input_mapping:
+        penalty_context_str: account_penalty_context
+        raw_query: raw_query
+    next_nodes:
+      - IF_HAS_IMAGE
+    output_mapping:
+      confirm_liveness_detection: confirm_liveness_detection
+      has_ban: has_ban
+      reject_data: reject_data
+
+  IF_HAS_IMAGE:
+    type: IF
+    config:
+      conditions:
+        - description: 用户发送了图片
+          expression: len(file_urls) > 0
+          target_node: LLM_READ_IMAGE
+        - description: 无图片
+          expression: 'true'
+          target_node: TEXT_NO_IMAGE
+
+  LLM_READ_IMAGE:
+    type: LLM
+    config:
+      model_id: qwen3-vl-32b-thinking
+      temperature: 0.1
+      max_tokens: 200
+      history_rounds: 0
+      system_prompt: >-
+        你是一个图片解读助手。请识别图片中的文本信息。输出格式：10字以内概括截图类型 + 200字以内文字描述。重点关注：错误提示、页面状态、按钮名称、弹窗内容。
+      user_prompt_template: '请描述这张图片中的内容：{{file_urls[0]}}'
+    next_nodes:
+      - LLM_IMG_QUERY_REWRITE
+    output_mapping:
+      output: img_description
+
+  LLM_IMG_QUERY_REWRITE:
+    type: LLM
+    config:
+      model_id: qwen3.5-27b
+      temperature: 0.1
+      max_tokens: 100
+      history_rounds: 0
+      system_prompt: >-
+        你是一个query合并助手。用户发送了一张图片和一段文字。请推理用户发图片+文字的意图，将两者合并为一个关键词短文本。规则：1.如果文字已完整描述问题以文字为主 2.如果文字模糊如'这是怎么回事'以图片描述为主补充 3.输出不超过50字 4.只输出合并后的问题
+      user_prompt_template: |
+        用户文字输入：{{raw_query}}
+        图片内容描述：{{img_description}}
+        请合并为一个完整的用户问题：
+    next_nodes:
+      - TEXT_MERGE_QUERY
+    output_mapping:
+      output: img_query
+
+  TEXT_NO_IMAGE:
+    type: CODE
+    config:
+      function_name: passthrough
+      input_mapping:
+        value: raw_query
+    next_nodes:
+      - TEXT_MERGE_QUERY
+    output_mapping:
+      value: no_img_query
+
+  TEXT_MERGE_QUERY:
+    type: CODE
+    config:
+      function_name: merge_query
+      input_mapping:
+        img_query: img_query
+        no_img_query: no_img_query
+    next_nodes:
+      - CODE_EXTRACT_QUERY_ENTITIES
+    output_mapping:
+      merged: final_query
+
+  CODE_EXTRACT_QUERY_ENTITIES:
+    type: CODE
+    config:
+      function_name: extract_query_entities
+      input_mapping:
+        raw_query: raw_query
+        final_query: final_query
+    next_nodes:
+      - CODE_MERGE_ENTITY_CONTEXT
+    output_mapping:
+      query_entities: query_entities
+      chat_type: chat_type
+      domain: domain
+      issue_type: issue_type
+      intent_action: intent_action
+      is_vague_business: is_vague_business
+
+  CODE_MERGE_ENTITY_CONTEXT:
+    type: CODE
+    config:
+      function_name: merge_entity_context
+      input_mapping:
+        query_entities: query_entities
+        user_list: user_list
+        has_ban: has_ban
+        confirm_liveness_detection: confirm_liveness_detection
+        reject_data: reject_data
+    next_nodes:
+      - CODE_CHECK_SLOT_COMPLETENESS
+    output_mapping:
+      entity_context: entity_context
+      resolved_domain: resolved_domain
+
+  CODE_CHECK_SLOT_COMPLETENESS:
+    type: CODE
+    config:
+      function_name: check_slot_completeness
+      input_mapping:
+        entity_context: entity_context
+    next_nodes:
+      - IF_SLOT_ROUTE
+    output_mapping:
+      slot_complete: slot_complete
+      resolved_domain: resolved_domain
+      clarify_type: clarify_type
+      missing_slots: missing_slots
+      suggested_reply: suggested_reply
+      reason: reason
+      route_type: route_type
+      slot_check_result: slot_check_result
+
+  IF_SLOT_ROUTE:
+    type: IF
+    config:
+      conditions:
+        - description: 辱骂/闲聊等非业务 -> 直接回复
+          expression: route_type == 'direct_reply'
+          target_node: MSG_SLOT_REPLY
+        - description: 业务但槽位不足 -> 定向澄清
+          expression: route_type == 'clarify'
+          target_node: MSG_SLOT_REPLY
+        - description: 槽位完整 -> 继续原主流程
+          expression: 'true'
+          target_node: CODE_EXTRA_PROMPT
+
+  MSG_SLOT_REPLY:
+    type: MESSAGE
+    config:
+      template: '{{suggested_reply}}'
+    next_nodes:
+      - PHASE_POSTPROCESS
+    output_mapping:
+      template_output: final_answer
+
+  CODE_EXTRA_PROMPT:
+    type: CODE
+    config:
+      function_name: generate_extra_prompt
+      input_mapping:
+        user_list: user_list
+    next_nodes:
+      - LLM_SEMANTIC_CHECK
+    output_mapping:
+      extra_prompt: extra_prompt
+
+  LLM_SEMANTIC_CHECK:
+    type: LLM
+    config:
+      model_id: qwen3-30b-a3b-thinking-2507
+      temperature: 0.01
+      max_tokens: 5
+      history_rounds: 0
+      system_prompt: >-
+        你是一个语义完整性判断助手。判断标准：语义完整(1)能明确理解用户想问什么，例如'我的号被封了'→1 '怎么发文章'→1；语义不完整(0)无法理解用户意图，例如'嗯'→0 '？？？'→0 '你好'→0。只输出0或1。
+      user_prompt_template: |
+        用户输入：{{final_query}}
+        请判断语义完整性（输出0或1）：
+    next_nodes:
+      - LLM_QUERY_REWRITE
+    output_mapping:
+      output: semantic_complete
+
+  LLM_QUERY_REWRITE:
+    type: LLM
+    config:
+      model_id: qwen3.5-27b
+      temperature: 0.1
+      max_tokens: 50
+      history_rounds: 3
+      system_prompt: >-
+        你是一个query改写助手，请根据对话历史和当前输入，用25字以内概括用户当前意图。规则：1.如果依赖上下文补全指代 2.如果已独立完整直接返回 3.不超过25字 4.只输出改写结果 5.保留核心意图不增减语义
+      user_prompt_template: |
+        当前用户输入：{{final_query}}
+        请改写为独立完整的问题：
+    next_nodes:
+      - CODE_FILL_INFO
+    output_mapping:
+      output: rewrite_query
+
+  CODE_FILL_INFO:
+    type: CODE
+    config:
+      function_name: fill_query_with_info
+      input_mapping:
+        rewrite_query: rewrite_query
+        user_list: user_list
+        semantic_complete: semantic_complete
+        extra_prompt: extra_prompt
+    next_nodes:
+      - INTENT_MAIN
+    output_mapping:
+      query_with_info: rewrite_query_with_info
+      query_without_info: rewrite_query_without_info
+
+  INTENT_MAIN:
+    type: INTENT
+    config:
+      model_id: qwen3-30b-a3b-thinking-2507
+      temperature: 0.01
+      max_tokens: 10
+      history_rounds: 1
+      system_prompt: >-
+        你是百家号APP的智能客服意图识别助手。分类规则：1-业务问询（账号/收益/内容/权益/侵权/活动等）2-转人工（明确要人工客服，'有人工吗'算转人工，'工作时间是？'不算）3-高危言论（政治/暴力/色情/违法/威胁/人身攻击/投诉/曝光/举报/强烈负面情绪宣泄）4-达到目的/结束对话（问题已解决/感谢/再见）。只输出数字，无法归类输出-1。
+      user_prompt_template: |
+        用户问题：{{rewrite_query_with_info}}
+        请判断意图类别（输出数字）：
+      branches:
+        - key: '1'
+          target_node: INTENT_SECONDARY
+          name: 业务问询
+        - key: '2'
+          target_node: IF_NON_WORKING_TRANSFER
+          name: 转人工
+        - key: '3'
+          target_node: INTENT_HIGH_RISK
+          name: 高危言论
+        - key: '4'
+          target_node: TEXT_END_GREETING
+          name: 结束对话
+      default_branch: CODE_UNPARSED_HANDLER
+    output_mapping:
+      classification_id: main_intent_id
+
+  INTENT_SECONDARY:
+    type: INTENT
+    config:
+      model_id: qwen3-30b-a3b-thinking-2507
+      temperature: 0.01
+      max_tokens: 10
+      history_rounds: 1
+      pre_conditions:
+        - id: pre_2
+          description: 鼓励层/高权益直接转人工
+          expression: ('鼓励层' in user_list or '权益等级>6' in user_list) and main_intent_id == '2'
+          target_node: WORKFLOW_TRANSFER_HUMAN
+        - id: pre_3
+          description: 高危意图直接转人工
+          expression: main_intent_id == '3'
+          target_node: INTENT_HIGH_RISK
+        - id: pre_4
+          description: 连续3轮业务问询且非作弊→转人工
+          expression: main_intention_continuity_count >= 3 and main_intention_last_id == '1' and '作弊' not in reject_data
+          target_node: WORKFLOW_TRANSFER_HUMAN
+        - id: pre_5
+          description: 连续5轮未识别→转人工
+          expression: main_intention_no_parsed_lately_count >= 5
+          target_node: WORKFLOW_TRANSFER_HUMAN
+        - id: pre_6
+          description: 第1次转人工→挽留话术1
+          expression: main_intent_id == '2' and main_intention_to_human_count == 0 and reject_data == ''
+          target_node: LLM_TRANSFER_REJECT_1ST
+        - id: pre_12
+          description: 第2次转人工→挽留话术2
+          expression: main_intent_id == '2' and main_intention_to_human_count == 1 and reject_data == ''
+          target_node: LLM_TRANSFER_REJECT_2ND
+        - id: pre_7
+          description: 第3次及以上转人工→直接转
+          expression: main_intent_id == '2' and main_intention_to_human_count >= 2
+          target_node: WORKFLOW_TRANSFER_HUMAN
+        - id: pre_10
+          description: 达到目的→结束
+          expression: main_intent_id == '4'
+          target_node: TEXT_END_GREETING
+        - id: pre_11
+          description: 语义不完整→澄清
+          expression: semantic_complete == '0'
+          target_node: LLM_CLARIFY_REWRITE
+      system_prompt: >-
+        你是百家号APP的二级意图识别助手。用户已确认是业务问询。分类规则：8-新话题（语义完整且与最近3轮不相关，或新诉求，或上轮澄清引导这轮用户响应）9-追问（对历史话题的延续性提问）。只输出8或9。
+      user_prompt_template: |
+        用户问题：{{rewrite_query_with_info}}
+        请判断是新话题还是追问（输出8或9）：
+      branches:
+        - key: '8'
+          target_node: INTENT_ACCOUNT_ABNORMAL
+          name: 新话题
+        - key: '9'
+          target_node: IF_PENALTY_BRANCH_FOLLOWUP
+          name: 追问
+      default_branch: LLM_CLARIFY_REWRITE
+    output_mapping:
+      classification_id: classification_id
+
+  INTENT_ACCOUNT_ABNORMAL:
+    type: INTENT
+    config:
+      model_id: qwen3.5-35b-a3b
+      temperature: 0.01
+      max_tokens: 10
+      history_rounds: 0
+      system_prompt: |
+        你是百家号APP的账号处罚识别助手。
+        你的任务是：仅判断用户问题是否明确属于"账号处罚/账号权限受限"问题。
+        输出规则：
+        - 输出1：仅当用户明确在问账号封禁、禁言、限制发文、评论权限关闭、黑名单、处罚通知、违规扣分、处罚申诉、账号被限制使用等账号处罚类问题。
+        - 输出-1：只要不是明确的账号处罚问题，都输出-1。
+        特别注意以下情况一律输出-1：
+        1. 单篇文章/单个作品审核不通过
+        2. 内容审核失败、稿件被拒、作品未过审
+        3. 登录失败、登不上、验证码问题、密码问题、设备问题、网络问题
+        4. 普通业务咨询、内容咨询、收益咨询、功能咨询
+        5. 仅出现"异常""不通过""受限"但没有明确指向账号处罚
+        示例：
+        - "我的号被封了" → 1
+        - "我被禁言了" → 1
+        - "为什么我不能发文章了，提示账号受限" → 1
+        - "我的文章为什么审核不通过" → -1
+        - "编号111的文章为什么没过审" → -1
+        - "为什么我的账号登录不了" → -1
+        - "收不到验证码怎么办" → -1
+        只输出1或-1，不要解释。
+      user_prompt_template: |
+        用户问题：{{rewrite_query_with_info}}
+        请判断是否为账号处罚问题（输出1或-1）：
+      branches:
+        - key: '1'
+          target_node: ROUTE_TO_PENALTY
+          name: 账号处罚
+        - key: '-1'
+          target_node: CODE_NEW_TOPIC_QUERY_MERGE
+          name: 非账号处罚
+      default_branch: CODE_NEW_TOPIC_QUERY_MERGE
+    output_mapping:
+      classification_id: classification_id
+
+  IF_PENALTY_BRANCH_FOLLOWUP:
+    type: IF
+    config:
+      conditions:
+        - description: 上轮有处罚
+          expression: has_ban == 1 or confirm_liveness_detection == 1
+          target_node: INTENT_ACCOUNT_ABNORMAL
+        - description: 无处罚
+          expression: 'true'
+          target_node: CODE_FOLLOWUP_QUERY_MERGE
+
+  CODE_NEW_TOPIC_QUERY_MERGE:
+    type: CODE
+    config:
+      function_name: merge_topic_query
+      input_mapping:
+        rewrite_query: rewrite_query
+        classification_id: classification_id
+    next_nodes:
+      - LLM_QUERY_REWRITE_NEW
+    output_mapping:
+      merged_query: search_topic_query
+
+  LLM_QUERY_REWRITE_NEW:
+    type: LLM
+    config:
+      model_id: qwen3.5-27b
+      temperature: 0.1
+      max_tokens: 30
+      history_rounds: 0
+      system_prompt: >-
+        你是搜索query优化助手。将用户问题改写为最适合知识库检索的关键词。规则：1.去除停用词 2.仅保留核心意图关键词 3.保留业务实体 4.输出不超20字 5.只输出结果
+      user_prompt_template: |
+        用户问题：{{search_topic_query}}
+        请提取检索关键词：
+    next_nodes:
+      - KB_SEARCH_MAIN
+    output_mapping:
+      output: kb_search_query
+
+  CODE_FOLLOWUP_QUERY_MERGE:
+    type: CODE
+    config:
+      function_name: merge_followup_query
+      input_mapping:
+        rewrite_query: rewrite_query
+        classification_id: classification_id
+    next_nodes:
+      - LLM_QUERY_REWRITE_FOLLOWUP
+    output_mapping:
+      merged_query: search_followup_query
+
+  LLM_QUERY_REWRITE_FOLLOWUP:
+    type: LLM
+    config:
+      model_id: qwen3.5-27b
+      temperature: 0.1
+      max_tokens: 30
+      history_rounds: 3
+      system_prompt: >-
+        你是追问query改写助手。根据对话历史，将追问改写为独立完整的检索关键词。规则：1.补全指代和省略 2.去除停用词 3.输出不超25字 4.只输出结果
+      user_prompt_template: |
+        当前追问：{{search_followup_query}}
+        请提取检索关键词：
+    next_nodes:
+      - KB_SEARCH_FOLLOWUP
+    output_mapping:
+      output: kb_search_query
+
+  KB_SEARCH_MAIN:
+    type: KNOWLEDGE
+    config:
+      knowledge_base_id: bailing_bjh_app
+      strategy: hybrid
+      reranker: bce-reranker-base
+      reranker_threshold: 0.44
+      recall_count: 5
+      query_source: kb_search_query
+    next_nodes:
+      - CODE_KNOWLEDGE_POSTPROCESS
+    output_mapping:
+      results: raw_knowledge_results
+
+  KB_SEARCH_FOLLOWUP:
+    type: KNOWLEDGE
+    config:
+      knowledge_base_id: bailing_bjh_app
+      strategy: hybrid
+      reranker: bce-reranker-base
+      reranker_threshold: 0.44
+      recall_count: 5
+      query_source: kb_search_query
+    next_nodes:
+      - CODE_KNOWLEDGE_POSTPROCESS
+    output_mapping:
+      results: raw_knowledge_results
+
+  CODE_KNOWLEDGE_POSTPROCESS:
+    type: CODE
+    config:
+      function_name: postprocess_knowledge
+      input_mapping:
+        raw_results: raw_knowledge_results
+        rewrite_query: rewrite_query
+        user_list: user_list
+        has_ban: has_ban
+        confirm_liveness_detection: confirm_liveness_detection
+    next_nodes:
+      - CODE_KNOWLEDGE_MERGE_WITH_USER
+    output_mapping:
+      knowledge_list_for_llm: knowledge_list
+      knowledge_raw: knowledge_raw
+      link_map: link_map
+      question_category_ids: question_category_ids
+      fast_transfer: fast_transfer
+      match_success: match_success
+      user_info_list: user_info_list
+
+  CODE_KNOWLEDGE_MERGE_WITH_USER:
+    type: CODE
+    config:
+      function_name: merge_knowledge_context
+      input_mapping:
+        knowledge_list: knowledge_list
+        user_info_list: user_info_list
+        rewrite_query: rewrite_query
+        classification_id: classification_id
+    next_nodes:
+      - LLM_KNOWLEDGE_VALID
+    output_mapping:
+      context: llm_input_context
+
+  LLM_KNOWLEDGE_VALID:
+    type: LLM
+    config:
+      model_id: qwen3-vl-32b-thinking
+      temperature: 0.01
+      max_tokens: 5
+      history_rounds: 0
+      system_prompt: >-
+        你是知识相关性判断助手。判断知识库手册内容是否与用户问题相关能否帮助回答。相关(1)能回答或部分回答；不相关(0)完全无关。只输出0或1。
+      user_prompt_template: |
+        用户问题：{{rewrite_query_without_info}}
+        知识库内容：{{knowledge_list}}
+        请判断相关性：
+    next_nodes:
+      - IF_KNOWLEDGE_RELEVANT
+    output_mapping:
+      output: knowledge_valid
+
+  IF_KNOWLEDGE_RELEVANT:
+    type: IF
+    config:
+      conditions:
+        - description: 知识相关
+          expression: knowledge_valid == '1' or match_success == 1
+          target_node: IF_NEW_OR_FOLLOWUP_GEN
+        - description: 知识不相关
+          expression: 'true'
+          target_node: INTENT_EMOTION_CHECK
+
+  IF_NEW_OR_FOLLOWUP_GEN:
+    type: IF
+    config:
+      conditions:
+        - description: 追问
+          expression: classification_id == '9'
+          target_node: LLM_FOLLOWUP_ANSWER
+        - description: 新话题
+          expression: 'true'
+          target_node: LLM_CONTENT_GEN
+
+  LLM_CONTENT_GEN:
+    type: LLM
+    config:
+      model_id: qwen3.5-27b
+      temperature: 0.3
+      max_tokens: 500
+      history_rounds: 0
+      system_prompt: |
+        角色：百家号APP智能客服'小百'。任务：根据知识库手册回答用户问题。
+        规则：
+        1. 只基于知识库回答不编造任何信息
+        2. 亲切友好语气称呼用户为'创作者大人'
+        3. 简洁明了用Markdown无序列表分步说明
+        4. 知识库中有链接/图片原样返回
+        5. 回复不超200字
+        6. 知识库不足以完全回答如实说明并提供部分帮助
+        输出格式（严格JSON）：
+        {"answer":"回复内容Markdown格式","knowledge_indexes":"命中的知识条目索引逗号分隔"}
+        注意knowledge_indexes必须使用知识内容中[知识库索引:X]标记里的X值。
+      user_prompt_template: |
+        用户问题：{{rewrite_query_without_info}}
+        用户信息：{{user_info_list}}
+        知识库手册内容：
+        {{knowledge_list}}
+        请生成回答（严格JSON格式）：
+      output_parser: json
+    next_nodes:
+      - CODE_JSON_EXTRACT_AND_LINK_REPLACE
+    output_mapping:
+      output: gen_result_json
+
+  LLM_FOLLOWUP_ANSWER:
+    type: LLM
+    config:
+      model_id: qwen3.5-27b
+      temperature: 0.3
+      max_tokens: 500
+      history_rounds: 3
+      system_prompt: |
+        角色：百家号APP智能客服'小百'，用户正在追问上一个话题。任务：结合历史对话和知识库手册回答追问。
+        规则：
+        1. 结合上轮对话理解追问语境
+        2. 只基于知识库回答不编造
+        3. 追问内容在知识库找不到如实告知
+        4. 亲切友好称呼'创作者大人'
+        5. Markdown无序列表不超200字
+        输出格式（严格JSON）：{"answer":"回复内容","knowledge_indexes":"命中索引"}
+      user_prompt_template: |
+        当前追问：{{rewrite_query_without_info}}
+        用户信息：{{user_info_list}}
+        知识库手册内容：
+        {{knowledge_list}}
+        请生成追问回答（严格JSON格式）：
+      output_parser: json
+    next_nodes:
+      - CODE_JSON_EXTRACT_AND_LINK_REPLACE
+    output_mapping:
+      output: gen_result_json
+
+  INTENT_EMOTION_CHECK:
+    type: INTENT
+    config:
+      model_id: qwen3.5-27b
+      temperature: 0.01
+      max_tokens: 10
+      history_rounds: 0
+      system_prompt: >-
+        你是用户情绪分析助手。判断用户输入是仅在表达情绪宣泄还是包含具体问题。1-纯情绪宣泄：只在抱怨发泄没有具体可解答问题如'太烦了''你们平台太垃圾了'。其他-有具体问题：有具体诉求但知识库无法回答如'我想xxx但不知道怎么做'。只输出1（纯情绪）或-1（有具体问题）。
+      user_prompt_template: |
+        用户输入：{{rewrite_query_without_info}}
+        请判断是否为纯情绪宣泄（输出1或-1）：
+      branches:
+        - key: '1'
+          target_node: LLM_EMOTION_EMPATHY
+          name: 纯情绪
+        - key: '-1'
+          target_node: LLM_IRRELEVANT_GUIDE
+          name: 有具体问题
+      default_branch: LLM_IRRELEVANT_GUIDE
+    output_mapping:
+      classification_id: classification_id
+
+  LLM_EMOTION_EMPATHY:
+    type: LLM
+    config:
+      model_id: qwen3.5-27b
+      temperature: 0.6
+      max_tokens: 200
+      history_rounds: 1
+      system_prompt: >-
+        你是百家号官方AI客服'小百'，用户目前情绪不佳。规则：1.先共情用户感受表达理解 2.不要急于给解决方案先让用户感受被倾听 3.语气温暖亲切称呼'创作者大人' 4.最后温和引导用户描述具体问题 5.回复不超50字
+      user_prompt_template: |
+        用户说：{{rewrite_query_without_info}}
+        请给出共情安抚回复：
+    next_nodes:
+      - PHASE_POSTPROCESS
+    output_mapping:
+      output: final_answer
+
+  LLM_IRRELEVANT_GUIDE:
+    type: LLM
+    config:
+      model_id: qwen3.5-27b
+      temperature: 0.5
+      max_tokens: 200
+      history_rounds: 0
+      system_prompt: >-
+        你是百家号官方AI客服'小百'，用户问题暂时无法解答。规则：1.道歉并共情 2.不建议用户转人工（避免引导转人工压力）3.引导用户换个角度描述或尝试其他解决方式 4.语气友好称呼'创作者大人' 5.回复不超100字
+      user_prompt_template: |
+        用户说：{{rewrite_query_without_info}}
+        请给出引导回复：
+    next_nodes:
+      - PHASE_POSTPROCESS
+    output_mapping:
+      output: final_answer
+
+  INTENT_HIGH_RISK:
+    type: INTENT
+    config:
+      model_id: qwen3-30b-a3b-thinking-2507
+      temperature: 0.01
+      max_tokens: 10
+      history_rounds: 0
+      system_prompt: >-
+        你是高危言论检测助手。分类规则：1-威胁官方（舆情/投诉威胁/诉讼/上访/曝光）2-政治因素 3-恐暴极端 4-邪教反动 5-境外倒灌 6-色情低俗 8-人身伤害（攻击/侮辱/歧视）9-非法行为（赌博/诈骗/传销/毒品）。不属于以上输出-1。只输出数字。
+      user_prompt_template: |
+        用户输入：{{rewrite_query_without_info}}
+        请判断高危类别（输出数字）：
+      branches:
+        - key: '1'
+          target_node: IF_HIGH_RISK_TRANSFER
+          name: 威胁官方
+        - key: '2'
+          target_node: IF_HIGH_RISK_TRANSFER
+          name: 政治因素
+        - key: '3'
+          target_node: IF_HIGH_RISK_TRANSFER
+          name: 恐暴极端
+        - key: '4'
+          target_node: IF_HIGH_RISK_TRANSFER
+          name: 邪教反动
+        - key: '5'
+          target_node: IF_HIGH_RISK_TRANSFER
+          name: 境外倒灌
+        - key: '6'
+          target_node: MSG_HIGH_RISK_REJECT
+          name: 色情低俗
+        - key: '8'
+          target_node: MSG_HIGH_RISK_REJECT
+          name: 人身伤害
+        - key: '9'
+          target_node: MSG_HIGH_RISK_REJECT
+          name: 非法行为
+      default_branch: INTENT_EMOTION_CHECK_HIGHRISK
+    output_mapping:
+      classification_id: high_risk_class_id
+
+  IF_HIGH_RISK_TRANSFER:
+    type: IF
+    config:
+      conditions:
+        - description: 非工时
+          expression: "'非工时' in user_list"
+          target_node: LLM_NON_WORKING_REJECT
+        - description: 工时内
+          expression: 'true'
+          target_node: WORKFLOW_TRANSFER_HUMAN
+
+  MSG_HIGH_RISK_REJECT:
+    type: MESSAGE
+    config:
+      template: 不好意思创作者大人，小百没办法回答这类问题。如果您有百家号相关的问题，欢迎随时提问哦~
+    next_nodes:
+      - PHASE_POSTPROCESS
+    output_mapping:
+      template_output: final_answer
+
+  INTENT_EMOTION_CHECK_HIGHRISK:
+    type: CODE
+    config:
+      function_name: passthrough_to_emotion
+    next_nodes:
+      - INTENT_EMOTION_CHECK
+
+  IF_NON_WORKING_TRANSFER:
+    type: IF
+    config:
+      conditions:
+        - description: 非工时
+          expression: "'非工时' in user_list"
+          target_node: LLM_NON_WORKING_REJECT
+        - description: 工时内
+          expression: 'true'
+          target_node: IF_TRANSFER_STRATEGY
+
+  IF_TRANSFER_STRATEGY:
+    type: IF
+    config:
+      conditions:
+        - description: 高权益直接转
+          expression: "'鼓励层' in user_list or '权益等级>6' in user_list"
+          target_node: WORKFLOW_TRANSFER_HUMAN
+        - description: 第1次挽留
+          expression: main_intention_to_human_count == 0 and reject_data == ''
+          target_node: LLM_TRANSFER_REJECT_1ST
+        - description: 第2次挽留
+          expression: main_intention_to_human_count == 1 and reject_data == ''
+          target_node: LLM_TRANSFER_REJECT_2ND
+        - description: 第3次直接转
+          expression: main_intention_to_human_count >= 2
+          target_node: WORKFLOW_TRANSFER_HUMAN
+        - description: 有处罚拒绝
+          expression: reject_data != ''
+          target_node: MSG_PENALTY_TRANSFER_REJECT
+
+  LLM_TRANSFER_REJECT_1ST:
+    type: LLM
+    config:
+      model_id: qwen3.5-27b
+      temperature: 0.5
+      max_tokens: 200
+      history_rounds: 1
+      system_prompt: >-
+        你是百家号官方AI客服'小百'，用户要求转人工但这是第一次。规则：1.不要直接说'不能转人工'而是表达'小百想先帮您试试' 2.称呼'创作者大人' 3.语气温暖自然不生硬 4.暗示如果解决不了可以再转人工 5.不超80字
+      user_prompt_template: |
+        用户说：{{rewrite_query_without_info}}
+        请生成挽留话术：
+    next_nodes:
+      - PHASE_POSTPROCESS
+    output_mapping:
+      output: final_answer
+
+  LLM_TRANSFER_REJECT_2ND:
+    type: LLM
+    config:
+      model_id: qwen3.5-27b
+      temperature: 0.5
+      max_tokens: 200
+      history_rounds: 1
+      system_prompt: >-
+        你是百家号官方AI客服'小百'，用户第二次要求转人工。规则：1.先道歉承认可能之前没解决好 2.再次引导描述具体问题 3.明确暗示'如果还需要下次会直接帮您转接' 4.称呼'创作者大人' 5.不超80字
+      user_prompt_template: |
+        用户说：{{rewrite_query_without_info}}
+        请生成第二次挽留话术：
+    next_nodes:
+      - PHASE_POSTPROCESS
+    output_mapping:
+      output: final_answer
+
+  LLM_NON_WORKING_REJECT:
+    type: LLM
+    config:
+      model_id: qwen3.5-27b
+      temperature: 0.6
+      max_tokens: 200
+      history_rounds: 0
+      system_prompt: >-
+        你是百家号官方AI客服'小百'，当前非工作时间人工客服已下班。规则：1.告知非工作时间人工工作时间9:00-21:00 2.表达歉意 3.尝试引导用户描述问题让你先帮忙 4.称呼'创作者大人' 5.不超80字 6.三步组件化：开场语+时间说明+安抚引导 7.禁止与历史回复重复
+      user_prompt_template: |
+        用户说：{{rewrite_query_without_info}}
+        请生成非工时引导话术：
+    next_nodes:
+      - PHASE_POSTPROCESS
+    output_mapping:
+      output: final_answer
+
+  MSG_PENALTY_TRANSFER_REJECT:
+    type: MESSAGE
+    config:
+      template: '{{reject_data}}'
+    next_nodes:
+      - PHASE_POSTPROCESS
+    output_mapping:
+      template_output: final_answer
+
+  WORKFLOW_TRANSFER_HUMAN:
+    type: CODE
+    config:
+      function_name: build_transfer_params
+      input_mapping:
+        question_category_ids: question_category_ids
+        rewrite_query: rewrite_query
+        user_list: user_list
+    next_nodes:
+      - MSG_TRANSFER_CARD
+    output_mapping:
+      transfer_flag: transfer_flag
+      params: transfer_params
+
+  MSG_TRANSFER_CARD:
+    type: MESSAGE
+    config:
+      template: 正在为您转接人工客服，请稍候...
+      message_type: transfer
+    next_nodes:
+      - PHASE_POSTPROCESS
+    output_mapping:
+      template_output: final_answer
+      message_type: message_type
+
+  CODE_UNPARSED_HANDLER:
+    type: IF
+    config:
+      conditions:
+        - description: 连续5轮未识别
+          expression: main_intention_no_parsed_lately_count >= 5
+          target_node: WORKFLOW_TRANSFER_HUMAN
+        - description: 未达阈值
+          expression: 'true'
+          target_node: LLM_CLARIFY_REWRITE
+
+  LLM_CLARIFY_REWRITE:
+    type: LLM
+    config:
+      model_id: qwen3.5-27b
+      temperature: 0.1
+      max_tokens: 30
+      history_rounds: 1
+      system_prompt: >-
+        你是搜索关键词提取助手。用户输入语义不完整或无法识别。请尽可能结合上下文提取最可能的搜索关键词。规则：1.输出1-3个关键词空格分隔 2.完全无法推断输出'百家号 常见问题' 3.只输出关键词
+      user_prompt_template: |
+        用户输入：{{final_query}}
+        请提取检索关键词：
+    next_nodes:
+      - KB_SEARCH_CLARIFY
+    output_mapping:
+      output: clarify_search_query
+
+  KB_SEARCH_CLARIFY:
+    type: KNOWLEDGE
+    config:
+      knowledge_base_id: bailing_bjh_app
+      strategy: hybrid
+      reranker: bce-reranker-base
+      reranker_threshold: 0.5
+      recall_count: 3
+      query_source: clarify_search_query
+    next_nodes:
+      - LLM_CLARIFY_GENERATE
+    output_mapping:
+      results: clarify_knowledge_results
+
+  LLM_CLARIFY_GENERATE:
+    type: LLM
+    config:
+      model_id: qwen3.5-27b
+      temperature: 0.5
+      max_tokens: 200
+      history_rounds: 1
+      system_prompt: >-
+        你是百家号官方AI客服'小百'，用户问题表达不够清晰。规则：1.如果知识库有可能相关内容基于知识库给出2-3个猜测选项让用户选择 2.如果知识库无相关内容礼貌请用户更详细描述 3.称呼'创作者大人' 4.不要直接说'你的问题不清楚'用'小百想更准确地帮到您'的方式引导 5.不超100字
+      user_prompt_template: |
+        用户说：{{final_query}}
+        可能相关的知识条目：
+        {{clarify_knowledge_results}}
+        请生成澄清引导话术：
+    next_nodes:
+      - PHASE_POSTPROCESS
+    output_mapping:
+      output: final_answer
+
+  TEXT_END_GREETING:
+    type: MESSAGE
+    config:
+      template: 感谢创作者大人的咨询，很高兴能帮到您！如果后续还有问题，随时欢迎来找小百哦~ 祝您创作愉快！
+    next_nodes:
+      - PHASE_POSTPROCESS
+    output_mapping:
+      template_output: final_answer
+
+  CODE_JSON_EXTRACT_AND_LINK_REPLACE:
+    type: CODE
+    config:
+      function_name: extract_json_and_replace_links
+      input_mapping:
+        gen_result_json: gen_result_json
+        knowledge_raw: knowledge_raw
+        link_map: link_map
+    next_nodes:
+      - IF_FAST_TRANSFER
+    output_mapping:
+      answer: final_answer
+      knowledge_indexes: knowledge_indexes
+      question_category_ids: real_question_category_ids
+      fast_transfer: real_fast_transfer
+
+  IF_FAST_TRANSFER:
+    type: IF
+    config:
+      conditions:
+        - description: 快转人工+工时内
+          expression: real_fast_transfer == 1 and '非工时' not in user_list
+          target_node: WORKFLOW_TRANSFER_HUMAN
+        - description: 快转人工+非工时
+          expression: real_fast_transfer == 1 and '非工时' in user_list
+          target_node: LLM_NON_WORKING_REJECT
+        - description: 不需要快转
+          expression: 'true'
+          target_node: IF_PUSH_MATERIAL
+
+  IF_PUSH_MATERIAL:
+    type: IF
+    config:
+      conditions:
+        - description: 含物料链接
+          expression: "'wuliaoka.baidu.com' in final_answer"
+          target_node: MSG_WITH_MATERIAL
+        - description: 正常输出
+          expression: 'true'
+          target_node: PHASE_POSTPROCESS
+
+  MSG_WITH_MATERIAL:
+    type: CODE
+    config:
+      function_name: attach_material_card
+      input_mapping:
+        final_answer: final_answer
+    next_nodes:
+      - PHASE_POSTPROCESS
+    output_mapping:
+      message_type: message_type
+      material_id: material_id
+
+  PHASE_POSTPROCESS:
+    type: CODE
+    config:
+      function_name: noop
+    next_nodes:
+      - CODE_CONTEXT_UPDATE
+
+  CODE_CONTEXT_UPDATE:
+    type: CODE
+    config:
+      function_name: update_talk_context
+      input_mapping:
+        talk_context: talk_context
+        main_intent_id: main_intent_id
+        secondary_intent_id: secondary_intent_id
+        classification_id: classification_id
+    next_nodes:
+      - CODE_PENALTY_CONTEXT_UPDATE
+    output_mapping:
+      new_talk_context: updated_talk_context
+
+  CODE_PENALTY_CONTEXT_UPDATE:
+    type: CODE
+    config:
+      function_name: update_penalty_context
+      input_mapping:
+        account_penalty_context: account_penalty_context
+        penalty_type: penalty_type
+        penalty_reject_data: penalty_reject_data
+        has_ban: has_ban
+        confirm_liveness_detection: confirm_liveness_detection
+    next_nodes:
+      - MEM_WRITE_TALK
+      - MEM_WRITE_PENALTY
+    output_mapping:
+      new_penalty_context: updated_penalty_context
+
+  MEM_WRITE_TALK:
+    type: MEMORY
+    config:
+      operation: write
+      variable: talk_context
+      value_source: updated_talk_context
+    next_nodes:
+      - OUTPUT_FINAL
+
+  MEM_WRITE_PENALTY:
+    type: MEMORY
+    config:
+      operation: write
+      variable: account_penalty_context
+      value_source: updated_penalty_context
+    next_nodes:
+      - OUTPUT_FINAL
+
+  OUTPUT_FINAL:
+    type: MESSAGE
+    config:
+      template: '{{final_answer}}'
+      message_type: '{{message_type}}'
+    next_nodes:
+      - END
+
+  END:
+    type: END
+
+  ROUTE_TO_PENALTY:
+    type: ROUTE
+    config:
+      agent_name: penalty_agent
+      input_mapping:
+        raw_query: raw_query
+        rewrite_query: rewrite_query
+        user_list: user_list
+        confirm_liveness_detection: confirm_liveness_detection
+        has_ban: has_ban
+        variable_data: variable_data
+        main_intention_to_human_count: main_intention_to_human_count
+        user_id: user_id
+        conversation_id: conversation_id
+      output_mapping:
+        final_answer: final_answer
+        penalty_message: penalty_message
+        penalty_type: penalty_type
+        penalty_data: penalty_data
+      status_routing:
+        resolved: PHASE_POSTPROCESS
+        unresolved: CODE_NEW_TOPIC_QUERY_MERGE
+        transfer: CODE_CONTEXT_UPDATE

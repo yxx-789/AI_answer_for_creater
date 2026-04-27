@@ -1,0 +1,134 @@
+# 修改权限控制配置
+# 定义AI优化器可以修改哪些内容
+
+# ============================================================
+# 权限级别定义
+# ============================================================
+# L1: 完全开放 - AI可以自由修改
+# L2: 限制修改 - AI只能修改参数，不能修改结构
+# L3: 完全禁止 - AI不能修改，只能人工修改
+
+# ============================================================
+# 全局规则
+# ============================================================
+global:
+  # 禁止删除的节点
+  protected_nodes:
+    - START
+    - END
+    - MSG_OUTPUT
+
+  # 禁止修改的变量
+  protected_variables:
+    - raw_query
+    - user_id
+    - conversation_id
+
+  # 禁止添加的内容
+  forbidden_additions:
+    - external_api_calls  # 禁止添加外部API调用
+    - file_operations     # 禁止添加文件操作
+    - database_queries    # 禁止添加数据库查询
+
+# ============================================================
+# 场景级权限
+# ============================================================
+scenarios:
+  # 文章下线场景
+  article_offline:
+    description: "文章下线处理流程"
+    nodes:
+      # 完全禁止修改的节点
+      START:
+        permission: L3
+        reason: "流程入口，禁止修改"
+
+      # 限制修改的节点
+      KB_SEARCH_MAIN:
+        permission: L2
+        allowed_modifications:
+          - recall_count      # 可以调整召回数量
+          - score_threshold   # 可以调整分数阈值
+        forbidden_modifications:
+          - knowledge_base_id  # 不能更换知识库
+          - query_source       # 不能更换查询源
+
+      # 完全开放的节点
+      LLM_REPLY:
+        permission: L1
+        allowed_modifications:
+          - system_prompt
+          - user_prompt_template
+          - temperature
+          - max_tokens
+
+      END:
+        permission: L3
+        reason: "流程终点，禁止修改"
+
+  # 账号封禁场景
+  account_banned:
+    description: "账号封禁处理流程"
+    nodes:
+      START:
+        permission: L3
+
+      INTENT_MAIN:
+        permission: L2
+        allowed_modifications:
+          - temperature
+        forbidden_modifications:
+          - system_prompt  # 意图识别的prompt不能改
+
+      LLM_REPLY:
+        permission: L1
+
+      END:
+        permission: L3
+
+  # 转人工场景
+  transfer_human:
+    description: "转人工处理流程"
+    nodes:
+      # 转人工场景的所有节点都禁止AI修改
+      START:
+        permission: L3
+        reason: "转人工流程敏感，仅人工修改"
+
+      CHECK_CONDITION:
+        permission: L3
+
+      WORKFLOW_TRANSFER:
+        permission: L3
+
+      END:
+        permission: L3
+
+# ============================================================
+# 动态权限调整
+# ============================================================
+dynamic_permissions:
+  # 如果连续失败3次，自动升级权限级别
+  failure_threshold: 3
+
+  # 如果成功修改并改善效果，可以降低权限级别
+  success_threshold: 5
+
+  # 权限升级规则
+  escalation_rules:
+    - condition: "连续失败 >= 3"
+      action: "L1 → L2"
+    - condition: "连续失败 >= 5"
+      action: "L2 → L3"
+    - condition: "引入禁止词"
+      action: "直接拒绝"
+
+# ============================================================
+# 元权限（谁可以修改这个文件）
+# ============================================================
+meta:
+  this_file_permission: L3  # 只有创建者可以修改此文件
+  allowed_modifiers:
+    - xingyao  # 耀子的用户名
+  version: "1.0"
+  last_updated: "2026-04-19"

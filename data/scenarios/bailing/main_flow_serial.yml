@@ -1,0 +1,320 @@
+# 修改后的PHASE 1-2（串行版本）
+
+nodes:
+  # ============ START节点 ============
+  START:
+    type: START
+    next_nodes:
+    - API_CHECK_CONDITION
+    config:
+      description: 入口节点，串行执行
+    parallel: false
+
+  # ============ PHASE 1: 预处理（串行） ============
+
+  # Step 1: 条件信息获取
+  API_CHECK_CONDITION:
+    type: API
+    config:
+      url: https://ufosdk.baidu.com/connector/checkCondition
+      method: POST
+      body_template:
+        conditionIds:
+        - 2296
+        - 2049
+        - 2031
+        - 2030
+        - 2027
+        - 2026
+        - 2025
+        - 1327
+        conversationId: '{{conversation_id}}'
+      timeout_sec: 5
+      mock_response:
+        code: 0
+        data:
+          conditionDescList:
+          - 非鼓励层
+          - 工时内
+          - 非黑名单
+    next_nodes:
+    - API_RESOLVE_VARIABLE
+    output_mapping:
+      condition_desc_list: data.conditionDescList
+
+  # Step 2: 变量信息获取
+  API_RESOLVE_VARIABLE:
+    type: API
+    config:
+      url: https://ufosdk.baidu.com/connector/resolveVariable
+      method: POST
+      body_template:
+        variableList:
+        - unapprovedCount
+        - userAccountStatusDesc
+        - blackReason
+        - suggestion
+        conversationId: '{{conversation_id}}'
+      timeout_sec: 5
+      mock_response:
+        code: 0
+        data:
+          userAccountStatusDesc: 暂未发现异常
+          blackReason: ''
+          unapprovedCount: '0'
+          suggestion: ''
+    next_nodes:
+    - CODE_USER_INFO_MERGE
+    output_mapping:
+      variable_data: data
+
+  # Step 3: 合并用户信息
+  CODE_USER_INFO_MERGE:
+    type: CODE
+    config:
+      function_name: merge_user_info
+      input_mapping:
+        condition_desc_list: condition_desc_list
+        variable_data: variable_data
+    next_nodes:
+    - MEM_READ_TALK
+    output_mapping:
+      user_list: user_list
+
+  # Step 4: 读取对话上下文
+  MEM_READ_TALK:
+    type: MEMORY
+    config:
+      operation: read
+      variable: talk_context
+    next_nodes:
+    - CODE_TALK_CONTEXT_PARSE
+
+  # Step 5: 解析对话上下文
+  CODE_TALK_CONTEXT_PARSE:
+    type: CODE
+    config:
+      function_name: parse_talk_context
+      input_mapping:
+        talk_context_str: talk_context
+    next_nodes:
+    - CODE_HUMAN_PARSE
+    output_mapping:
+      count_map: main_intention_count_map
+      last_id: main_intention_last_id
+      continuity_count: main_intention_continuity_count
+      parsed_array: talk_context_parsed
+
+  # Step 6: 解析转人工统计
+  CODE_HUMAN_PARSE:
+    type: CODE
+    config:
+      function_name: parse_transfer_stats
+      input_mapping:
+        count_map: main_intention_count_map
+        talk_context_parsed: talk_context_parsed
+    next_nodes:
+    - CODE_UNPARSED_PARSE
+    output_mapping:
+      total_count: main_intention_to_human_count
+      recent_count: main_intention_to_human_lately_count
+
+  # Step 7: 解析未识别统计
+  CODE_UNPARSED_PARSE:
+    type: CODE
+    config:
+      function_name: parse_unparsed_stats
+      input_mapping:
+        count_map: main_intention_count_map
+        talk_context_parsed: talk_context_parsed
+    next_nodes:
+    - MEM_READ_PENALTY
+    output_mapping:
+      total_count: main_intention_no_parsed_count
+      recent_count: main_intention_no_parsed_lately_count
+
+  # Step 8: 读取处罚上下文
+  MEM_READ_PENALTY:
+    type: MEMORY
+    config:
+      operation: read
+      variable: account_penalty_context
+    next_nodes:
+    - CODE_PENALTY_PARSE
+
+  # Step 9: 解析处罚上下文
+  CODE_PENALTY_PARSE:
+    type: CODE
+    config:
+      function_name: parse_penalty_context
+      input_mapping:
+        penalty_context_str: account_penalty_context
+        raw_query: raw_query
+    next_nodes:
+    - IF_HAS_IMAGE
+    output_mapping:
+      confirm_liveness_detection: confirm_liveness_detection
+      has_ban: has_ban
+      reject_data: reject_data
+
+  # Step 10: 判断是否有图片
+  IF_HAS_IMAGE:
+    type: IF
+    config:
+      conditions:
+      - description: 用户发送了图片
+        expression: len(file_urls) > 0
+        target_node: LLM_READ_IMAGE
+      - description: 无图片
+        expression: 'true'
+        target_node: TEXT_NO_IMAGE
+
+  # Step 11a: 图片理解分支
+  LLM_READ_IMAGE:
+    type: LLM
+    config:
+      model_id: qwen3-vl-32b-thinking
+      temperature: 0.1
+      max_tokens: 200
+      history_rounds: 0
+      system_prompt: 你是一个图片解读助手。请识别图片中的文本信息。输出格式：10字以内概括截图类型 + 200字以内文字描述。重点关注：错误提示、页面状态、按钮名称、弹窗内容。
+      user_prompt: 请描述这张图片中的内容：{{file_urls[0]}}
+    next_nodes:
+    - LLM_IMG_QUERY_REWRITE
+    output_mapping:
+      output: img_description
+
+  LLM_IMG_QUERY_REWRITE:
+    type: LLM
+    config:
+      model_id: qwen3.5-27b
+      temperature: 0.1
+      max_tokens: 100
+      history_rounds: 0
+      system_prompt: 你是一个query合并助手。用户发送了一张图片和一段文字。请推理用户发图片+文字的意图，将两者合并为一个关键词短文本。规则：1.如果文字已完整描述问题以文字为主 2.如果文字模糊如'这是怎么回事'以图片描述为主补充 3.输出不超过50字 4.只输出合并后的问题
+      user_prompt: '用户文字输入：{{raw_query}}
+
+        图片内容描述：{{img_description}}
+
+        请合并为一个完整的用户问题：'
+    next_nodes:
+    - CODE_EXTRA_PROMPT
+    output_mapping:
+      output: img_query
+
+  # Step 11b: 无图片分支
+  TEXT_NO_IMAGE:
+    type: CODE
+    config:
+      function_name: passthrough
+      input_mapping:
+        value: raw_query
+    next_nodes:
+    - TEXT_MERGE_QUERY
+    output_mapping:
+      value: no_img_query
+
+  TEXT_MERGE_QUERY:
+    type: CODE
+    config:
+      function_name: merge_query
+      input_mapping:
+        img_query: img_query
+        no_img_query: no_img_query
+    next_nodes:
+    - CODE_EXTRA_PROMPT
+    output_mapping:
+      merged: final_query
+
+  # Step 12: 生成额外提示
+  CODE_EXTRA_PROMPT:
+    type: CODE
+    config:
+      function_name: generate_extra_prompt
+      input_mapping:
+        user_list: user_list
+    next_nodes:
+    - LLM_SEMANTIC_CHECK
+    output_mapping:
+      extra_prompt: extra_prompt
+
+  # Step 13: 语义完整性检查
+  LLM_SEMANTIC_CHECK:
+    type: LLM
+    config:
+      model_id: qwen3-30b-a3b-thinking-2507
+      temperature: 0.01
+      max_tokens: 5
+      history_rounds: 0
+      system_prompt: 你是一个语义完整性判断助手。判断标准：语义完整(1)能明确理解用户想问什么，例如'我的号被封了'→1 '怎么发文章'→1；语义不完整(0)无法理解用户意图，例如'嗯'→0 '？？？'→0 '你好'→0。只输出0或1。
+      user_prompt: '用户输入：{{final_query}}
+
+        请判断语义完整性（输出0或1）：'
+    next_nodes:
+    - LLM_QUERY_REWRITE
+    output_mapping:
+      output: semantic_complete
+
+  # Step 14: Query改写
+  LLM_QUERY_REWRITE:
+    type: LLM
+    config:
+      model_id: qwen3.5-27b
+      temperature: 0.1
+      max_tokens: 50
+      history_rounds: 3
+      system_prompt: 你是一个query改写助手，请根据对话历史和当前输入，用25字以内概括用户当前意图。规则：1.如果依赖上下文补全指代 2.如果已独立完整直接返回 3.不超过25字 4.只输出改写结果 5.保留核心意图不增减语义
+      user_prompt: '当前用户输入：{{final_query}}
+
+        请改写为独立完整的问题：'
+    next_nodes:
+    - CODE_FILL_INFO
+    output_mapping:
+      output: rewrite_query
+
+  # Step 15: 填充用户信息
+  CODE_FILL_INFO:
+    type: CODE
+    config:
+      function_name: fill_query_with_info
+      input_mapping:
+        rewrite_query: rewrite_query
+        user_list: user_list
+        semantic_complete: semantic_complete
+        extra_prompt: extra_prompt
+    next_nodes:
+    - INTENT_MAIN
+    output_mapping:
+      query_with_info: rewrite_query_with_info
+      query_without_info: rewrite_query_without_info
+
+  # ============ PHASE 3: 主意图识别（不变） ============
+  INTENT_MAIN:
+    type: INTENT
+    config:
+      model_id: qwen3-30b-a3b-thinking-2507
+      temperature: 0.01
+      max_tokens: 10
+      history_rounds: 1
+      system_prompt: 你是百家号APP的智能客服意图识别助手。分类规则：1-业务问询（账号/收益/内容/权益/侵权/活动等）2-转人工（明确要人工客服，'有人工吗'算转人工，'工作时间是？'不算）3-高危言论（政治/暴力/色情/违法/威胁/人身攻击）4-达到目的/结束对话（问题已解决/感谢/再见）。只输出数字，无法归类输出-1。
+      user_prompt: '用户问题：{{rewrite_query_with_info}}
+
+        请判断意图类别（输出数字）：'
+      branches:
+      - key: '1'
+        target_node: INTENT_SECONDARY
+        name: 业务问询
+      - key: '2'
+        target_node: IF_NON_WORKING_TRANSFER
+        name: 转人工
+      - key: '3'
+        target_node: INTENT_HIGH_RISK
+        name: 高危言论
+      - key: '4'
+        target_node: TEXT_END_GREETING
+        name: 结束对话
+      default_branch: CODE_UNPARSED_HANDLER
+    output_mapping:
+      classification_id: main_intent_id
+
+# 后续节点保持不变...

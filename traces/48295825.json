@@ -1,0 +1,476 @@
+{
+  "trace_id": "48295825-3461-44aa-8538-ac21c07c58ef",
+  "scene_id": "bailing_main_flow",
+  "start_time": "2026-04-23T23:03:08.827812",
+  "duration_ms": 3,
+  "nodes_executed": [
+    "CODE_HUMAN_PARSE",
+    "END",
+    "CODE_PENALTY_PARSE",
+    "CODE_UNPARSED_PARSE",
+    "CODE_CHECK_SLOT_COMPLETENESS",
+    "MSG_SLOT_REPLY",
+    "IF_HAS_IMAGE",
+    "MEM_WRITE_TALK",
+    "CODE_EXTRACT_QUERY_ENTITIES",
+    "CODE_USER_INFO_MERGE",
+    "PHASE_POSTPROCESS",
+    "CODE_MERGE_ENTITY_CONTEXT",
+    "MEM_READ_PENALTY",
+    "OUTPUT_FINAL",
+    "CODE_CONTEXT_UPDATE",
+    "CODE_TALK_CONTEXT_PARSE",
+    "CODE_PENALTY_CONTEXT_UPDATE",
+    "MEM_READ_TALK",
+    "API_CHECK_CONDITION",
+    "TEXT_NO_IMAGE",
+    "API_RESOLVE_VARIABLE",
+    "TEXT_MERGE_QUERY",
+    "START",
+    "IF_SLOT_ROUTE",
+    "MEM_WRITE_PENALTY"
+  ],
+  "trace_log": [
+    {
+      "timestamp": "2026-04-23T23:03:08.827890",
+      "trace_id": "48295825-3461-44aa-8538-ac21c07c58ef",
+      "node_id": "START",
+      "event": "scenario_start",
+      "elapsed_ms": 0,
+      "data": {
+        "scene_id": "bailing_main_flow",
+        "entry_node": "START",
+        "node_count": 73
+      }
+    },
+    {
+      "timestamp": "2026-04-23T23:03:08.828026",
+      "trace_id": "48295825-3461-44aa-8538-ac21c07c58ef",
+      "node_id": "START",
+      "event": "node_complete",
+      "elapsed_ms": 0,
+      "data": {
+        "status": "success",
+        "outputs": {},
+        "duration_ms": 0,
+        "retry_count": 0
+      }
+    },
+    {
+      "timestamp": "2026-04-23T23:03:08.828326",
+      "trace_id": "48295825-3461-44aa-8538-ac21c07c58ef",
+      "node_id": "API_CHECK_CONDITION",
+      "event": "node_complete",
+      "elapsed_ms": 0,
+      "data": {
+        "status": "success",
+        "outputs": {
+          "raw_response": {
+            "code": 0,
+            "data": {
+              "conditionDescList": [
+                "非鼓励层",
+                "工时内",
+                "非黑名单"
+              ]
+            }
+          },
+          "condition_desc_list": [
+            "非鼓励层",
+            "工时内",
+            "非黑名单"
+          ]
+        },
+        "duration_ms": 0,
+        "retry_count": 0
+      }
+    },
+    {
+      "timestamp": "2026-04-23T23:03:08.828539",
+      "trace_id": "48295825-3461-44aa-8538-ac21c07c58ef",
+      "node_id": "API_RESOLVE_VARIABLE",
+      "event": "node_complete",
+      "elapsed_ms": 0,
+      "data": {
+        "status": "success",
+        "outputs": {
+          "raw_response": {
+            "code": 0,
+            "data": {
+              "userAccountStatusDesc": "暂未发现异常",
+              "blackReason": "",
+              "unapprovedCount": "0",
+              "suggestion": ""
+            }
+          },
+          "variable_data": {
+            "userAccountStatusDesc": "暂未发现异常",
+            "blackReason": "",
+            "unapprovedCount": "0",
+            "suggestion": ""
+          }
+        },
+        "duration_ms": 0,
+        "retry_count": 0
+      }
+    },
+    {
+      "timestamp": "2026-04-23T23:03:08.828650",
+      "trace_id": "48295825-3461-44aa-8538-ac21c07c58ef",
+      "node_id": "CODE_USER_INFO_MERGE",
+      "event": "node_complete",
+      "elapsed_ms": 0,
+      "data": {
+        "status": "success",
+        "outputs": {
+          "user_list": []
+        },
+        "duration_ms": 0,
+        "retry_count": 0
+      }
+    },
+    {
+      "timestamp": "2026-04-23T23:03:08.828724",
+      "trace_id": "48295825-3461-44aa-8538-ac21c07c58ef",
+      "node_id": "MEM_READ_TALK",
+      "event": "node_complete",
+      "elapsed_ms": 0,
+      "data": {
+        "status": "success",
+        "outputs": {},
+        "duration_ms": 0,
+        "retry_count": 0
+      }
+    },
+    {
+      "timestamp": "2026-04-23T23:03:08.828857",
+      "trace_id": "48295825-3461-44aa-8538-ac21c07c58ef",
+      "node_id": "CODE_TALK_CONTEXT_PARSE",
+      "event": "node_complete",
+      "elapsed_ms": 1,
+      "data": {
+        "status": "success",
+        "outputs": {
+          "count_map": {},
+          "last_id": "",
+          "continuity_count": 0,
+          "parsed_array": []
+        },
+        "duration_ms": 0,
+        "retry_count": 0
+      }
+    },
+    {
+      "timestamp": "2026-04-23T23:03:08.828975",
+      "trace_id": "48295825-3461-44aa-8538-ac21c07c58ef",
+      "node_id": "CODE_HUMAN_PARSE",
+      "event": "node_complete",
+      "elapsed_ms": 1,
+      "data": {
+        "status": "success",
+        "outputs": {
+          "total_count": 0,
+          "recent_count": 0
+        },
+        "duration_ms": 0,
+        "retry_count": 0
+      }
+    },
+    {
+      "timestamp": "2026-04-23T23:03:08.829094",
+      "trace_id": "48295825-3461-44aa-8538-ac21c07c58ef",
+      "node_id": "CODE_UNPARSED_PARSE",
+      "event": "node_complete",
+      "elapsed_ms": 1,
+      "data": {
+        "status": "success",
+        "outputs": {
+          "total_count": 0,
+          "recent_count": 0
+        },
+        "duration_ms": 0,
+        "retry_count": 0
+      }
+    },
+    {
+      "timestamp": "2026-04-23T23:03:08.829161",
+      "trace_id": "48295825-3461-44aa-8538-ac21c07c58ef",
+      "node_id": "MEM_READ_PENALTY",
+      "event": "node_complete",
+      "elapsed_ms": 1,
+      "data": {
+        "status": "success",
+        "outputs": {},
+        "duration_ms": 0,
+        "retry_count": 0
+      }
+    },
+    {
+      "timestamp": "2026-04-23T23:03:08.829262",
+      "trace_id": "48295825-3461-44aa-8538-ac21c07c58ef",
+      "node_id": "CODE_PENALTY_PARSE",
+      "event": "node_complete",
+      "elapsed_ms": 1,
+      "data": {
+        "status": "success",
+        "outputs": {
+          "confirm_liveness_detection": 0,
+          "has_ban": 0,
+          "reject_data": ""
+        },
+        "duration_ms": 0,
+        "retry_count": 0
+      }
+    },
+    {
+      "timestamp": "2026-04-23T23:03:08.829362",
+      "trace_id": "48295825-3461-44aa-8538-ac21c07c58ef",
+      "node_id": "IF_HAS_IMAGE",
+      "event": "node_complete",
+      "elapsed_ms": 1,
+      "data": {
+        "status": "success",
+        "outputs": {
+          "next_node": "TEXT_NO_IMAGE",
+          "matched_condition": "无图片"
+        },
+        "duration_ms": 0,
+        "retry_count": 0
+      }
+    },
+    {
+      "timestamp": "2026-04-23T23:03:08.829465",
+      "trace_id": "48295825-3461-44aa-8538-ac21c07c58ef",
+      "node_id": "TEXT_NO_IMAGE",
+      "event": "node_complete",
+      "elapsed_ms": 1,
+      "data": {
+        "status": "success",
+        "outputs": {
+          "value": "我的账号怎么了"
+        },
+        "duration_ms": 0,
+        "retry_count": 0
+      }
+    },
+    {
+      "timestamp": "2026-04-23T23:03:08.829588",
+      "trace_id": "48295825-3461-44aa-8538-ac21c07c58ef",
+      "node_id": "TEXT_MERGE_QUERY",
+      "event": "node_complete",
+      "elapsed_ms": 1,
+      "data": {
+        "status": "success",
+        "outputs": {
+          "merged": "我的账号怎么了"
+        },
+        "duration_ms": 0,
+        "retry_count": 0
+      }
+    },
+    {
+      "timestamp": "2026-04-23T23:03:08.829977",
+      "trace_id": "48295825-3461-44aa-8538-ac21c07c58ef",
+      "node_id": "CODE_EXTRACT_QUERY_ENTITIES",
+      "event": "node_complete",
+      "elapsed_ms": 2,
+      "data": {
+        "status": "success",
+        "outputs": {
+          "query_entities": "{\"raw_query\": \"我的账号怎么了\", \"normalized_query\": \"我的账号怎么了\", \"chat_type\": \"business\", \"domain\": \"account\", \"intent_action\": \"\", \"issue_type\": \"\", \"scene\": \"\", \"error_message\": \"\", \"content_type\": \"\", \"time_expr\": \"\", \"has_question_word\": 1, \"is_insult\": 0, \"is_smalltalk\": 0, \"is_vague_business\": 0, \"confidence\": 0.75, \"matched_keywords\": []}",
+          "chat_type": "business",
+          "domain": "account",
+          "issue_type": "",
+          "intent_action": "",
+          "is_vague_business": 0
+        },
+        "duration_ms": 0,
+        "retry_count": 0
+      }
+    },
+    {
+      "timestamp": "2026-04-23T23:03:08.830134",
+      "trace_id": "48295825-3461-44aa-8538-ac21c07c58ef",
+      "node_id": "CODE_MERGE_ENTITY_CONTEXT",
+      "event": "node_complete",
+      "elapsed_ms": 2,
+      "data": {
+        "status": "success",
+        "outputs": {
+          "entity_context": "{\"query_entities\": {\"raw_query\": \"我的账号怎么了\", \"normalized_query\": \"我的账号怎么了\", \"chat_type\": \"business\", \"domain\": \"account\", \"intent_action\": \"\", \"issue_type\": \"\", \"scene\": \"\", \"error_message\": \"\", \"content_type\": \"\", \"time_expr\": \"\", \"has_question_word\": 1, \"is_insult\": 0, \"is_smalltalk\": 0, \"is_vague_business\": 0, \"confidence\": 0.75, \"matched_keywords\": []}, \"user_entities\": {\"user_tags\": [], \"account_status_desc\": \"\", \"black_reason\": \"\", \"has_ban\": 0, \"confirm_liveness_detection\": 0, \"unapproved_count\": 0, \"is_blacklist\": 0, \"reject_data\": \"\"}, \"resolved_domain\": \"account\"}",
+          "resolved_domain": "account"
+        },
+        "duration_ms": 0,
+        "retry_count": 0
+      }
+    },
+    {
+      "timestamp": "2026-04-23T23:03:08.830586",
+      "trace_id": "48295825-3461-44aa-8538-ac21c07c58ef",
+      "node_id": "CODE_CHECK_SLOT_COMPLETENESS",
+      "event": "node_complete",
+      "elapsed_ms": 2,
+      "data": {
+        "status": "success",
+        "outputs": {
+          "slot_complete": 0,
+          "resolved_domain": "account",
+          "clarify_type": "account_issue_type",
+          "missing_slots": "[\"issue_type\"]",
+          "reason": "账号类问题缺少具体问题类型",
+          "suggested_reply": "创作者大人，请问您的账号具体遇到哪类问题呢？\n1. 登录异常\n2. 账号被限制/封禁\n3. 实名认证问题\n4. 账号信息或找回问题\n也可以把页面提示发给小百，我来帮您判断。",
+          "route_type": "clarify",
+          "slot_check_result": "{\"slot_complete\": 0, \"resolved_domain\": \"account\", \"clarify_type\": \"account_issue_type\", \"missing_slots\": [\"issue_type\"], \"reason\": \"账号类问题缺少具体问题类型\", \"suggested_reply\": \"创作者大人，请问您的账号具体遇到哪类问题呢？\\n1. 登录异常\\n2. 账号被限制/封禁\\n3. 实名认证问题\\n4. 账号信息或找回问题\\n也可以把页面提示发给小百，我来帮您判断。\", \"route_type\": \"clarify\", \"query_entities\": {\"raw_query\": \"我的账号怎么了\", \"normalized_query\": \"我的账号怎么了\", \"chat_type\": \"business\", \"domain\": \"account\", \"intent_action\": \"\", \"issue_type\": \"\", \"scene\": \"\", \"error_message\": \"\", \"content_type\": \"\", \"time_expr\": \"\", \"has_question_word\": 1, \"is_insult\": 0, \"is_smalltalk\": 0, \"is_vague_business\": 0, \"confidence\": 0.75, \"matched_keywords\": []}, \"user_entities\": {\"user_tags\": [], \"account_status_desc\": \"\", \"black_reason\": \"\", \"has_ban\": 0, \"confirm_liveness_detection\": 0, \"unapproved_count\": 0, \"is_blacklist\": 0, \"reject_data\": \"\"}}"
+        },
+        "duration_ms": 0,
+        "retry_count": 0
+      }
+    },
+    {
+      "timestamp": "2026-04-23T23:03:08.830699",
+      "trace_id": "48295825-3461-44aa-8538-ac21c07c58ef",
+      "node_id": "IF_SLOT_ROUTE",
+      "event": "node_complete",
+      "elapsed_ms": 2,
+      "data": {
+        "status": "success",
+        "outputs": {
+          "next_node": "MSG_SLOT_REPLY",
+          "matched_condition": "业务但槽位不足 -> 定向澄清"
+        },
+        "duration_ms": 0,
+        "retry_count": 0
+      }
+    },
+    {
+      "timestamp": "2026-04-23T23:03:08.830837",
+      "trace_id": "48295825-3461-44aa-8538-ac21c07c58ef",
+      "node_id": "MSG_SLOT_REPLY",
+      "event": "node_complete",
+      "elapsed_ms": 3,
+      "data": {
+        "status": "success",
+        "outputs": {
+          "template_output": "创作者大人，请问您的账号具体遇到哪类问题呢？\n1. 登录异常\n2. 账号被限制/封禁\n3. 实名认证问题\n4. 账号信息或找回问题\n也可以把页面提示发给小百，我来帮您判断。",
+          "message_type": "text"
+        },
+        "duration_ms": 0,
+        "retry_count": 0
+      }
+    },
+    {
+      "timestamp": "2026-04-23T23:03:08.830908",
+      "trace_id": "48295825-3461-44aa-8538-ac21c07c58ef",
+      "node_id": "PHASE_POSTPROCESS",
+      "event": "node_complete",
+      "elapsed_ms": 3,
+      "data": {
+        "status": "success",
+        "outputs": {},
+        "duration_ms": 0,
+        "retry_count": 0
+      }
+    },
+    {
+      "timestamp": "2026-04-23T23:03:08.831022",
+      "trace_id": "48295825-3461-44aa-8538-ac21c07c58ef",
+      "node_id": "CODE_CONTEXT_UPDATE",
+      "event": "node_complete",
+      "elapsed_ms": 3,
+      "data": {
+        "status": "success",
+        "outputs": {
+          "new_talk_context": "[{\"intentionId\": \"\", \"secondaryIntentionId\": \"\", \"classificationId\": \"\", \"timestamp\": \"2026-04-23T23:03:08.830956\"}]"
+        },
+        "duration_ms": 0,
+        "retry_count": 0
+      }
+    },
+    {
+      "timestamp": "2026-04-23T23:03:08.831132",
+      "trace_id": "48295825-3461-44aa-8538-ac21c07c58ef",
+      "node_id": "CODE_PENALTY_CONTEXT_UPDATE",
+      "event": "node_complete",
+      "elapsed_ms": 3,
+      "data": {
+        "status": "success",
+        "outputs": {
+          "new_penalty_context": "{}"
+        },
+        "duration_ms": 0,
+        "retry_count": 0
+      }
+    },
+    {
+      "timestamp": "2026-04-23T23:03:08.831195",
+      "trace_id": "48295825-3461-44aa-8538-ac21c07c58ef",
+      "node_id": "MEM_WRITE_TALK",
+      "event": "node_complete",
+      "elapsed_ms": 3,
+      "data": {
+        "status": "success",
+        "outputs": {},
+        "duration_ms": 0,
+        "retry_count": 0
+      }
+    },
+    {
+      "timestamp": "2026-04-23T23:03:08.831284",
+      "trace_id": "48295825-3461-44aa-8538-ac21c07c58ef",
+      "node_id": "OUTPUT_FINAL",
+      "event": "node_complete",
+      "elapsed_ms": 3,
+      "data": {
+        "status": "success",
+        "outputs": {
+          "template_output": "创作者大人，请问您的账号具体遇到哪类问题呢？\n1. 登录异常\n2. 账号被限制/封禁\n3. 实名认证问题\n4. 账号信息或找回问题\n也可以把页面提示发给小百，我来帮您判断。",
+          "message_type": "{{message_type}}"
+        },
+        "duration_ms": 0,
+        "retry_count": 0
+      }
+    },
+    {
+      "timestamp": "2026-04-23T23:03:08.831348",
+      "trace_id": "48295825-3461-44aa-8538-ac21c07c58ef",
+      "node_id": "END",
+      "event": "node_complete",
+      "elapsed_ms": 3,
+      "data": {
+        "status": "success",
+        "outputs": {},
+        "duration_ms": 0,
+        "retry_count": 0
+      }
+    },
+    {
+      "timestamp": "2026-04-23T23:03:08.831406",
+      "trace_id": "48295825-3461-44aa-8538-ac21c07c58ef",
+      "node_id": "MEM_WRITE_PENALTY",
+      "event": "node_complete",
+      "elapsed_ms": 3,
+      "data": {
+        "status": "success",
+        "outputs": {},
+        "duration_ms": 0,
+        "retry_count": 0
+      }
+    },
+    {
+      "timestamp": "2026-04-23T23:03:08.831438",
+      "trace_id": "48295825-3461-44aa-8538-ac21c07c58ef",
+      "node_id": "",
+      "event": "scenario_complete",
+      "elapsed_ms": 3,
+      "data": {
+        "nodes_executed": 25,
+        "duration_ms": 3
+      }
+    }
+  ],
+  "final_variables": {
+    "final_answer": "创作者大人，请问您的账号具体遇到哪类问题呢？\n1. 登录异常\n2. 账号被限制/封禁\n3. 实名认证问题\n4. 账号信息或找回问题\n也可以把页面提示发给小百，我来帮您判断。",
+    "transfer_flag": false,
+    "raw_query": "我的账号怎么了"
+  }
+}

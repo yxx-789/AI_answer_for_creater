@@ -1,0 +1,35 @@
+# 简化测试场景 - 用于快速验证
+metadata:
+  scene_id: test_simple
+  scene_name: 简化测试场景
+  version: 1.0.0
+
+context_variables:
+  raw_query:
+    type: String
+    source: user_input
+  final_answer:
+    type: String
+    default: ''
+
+nodes:
+  START:
+    type: START
+    next_nodes: [LLM]
+  
+  LLM:
+    type: LLM
+    config:
+      model_id: deepseek-v3.2
+      temperature: 0.7
+      max_tokens: 200
+      system_prompt: |
+        你是百灵平台的AI客服助手"小百"。请友好、专业地回答用户问题。
+        回复要简洁明了，不超过100字。
+      user_prompt_template: "用户问题：{{raw_query}}"
+    next_nodes: [END]
+    output_mapping:
+      output: final_answer
+  
+  END:
+    type: END

@@ -1,0 +1,691 @@
+{
+  "timestamp": "2026-04-24T12:42:31.700378",
+  "scenario": "bailing/main_flow.yml",
+  "model": "glm-5.1",
+  "user_input": "我怎么登录不上了？",
+  "ai_response": "抱歉给创作者大人带来不便，理解您着急的心情！您可以尝试清理缓存或切换网络，也可以换个角度描述下具体的报错提示，小百再帮您看看哦！",
+  "nodes": [
+    {
+      "timestamp": "2026-04-24T12:41:37.943577",
+      "trace_id": "8dfd668c-1d3b-46b4-b4ed-231b4a008acd",
+      "node_id": "START",
+      "event": "scenario_start",
+      "elapsed_ms": 0,
+      "data": {
+        "scene_id": "bailing_main_flow",
+        "entry_node": "START",
+        "node_count": 73
+      }
+    },
+    {
+      "timestamp": "2026-04-24T12:41:37.943679",
+      "trace_id": "8dfd668c-1d3b-46b4-b4ed-231b4a008acd",
+      "node_id": "START",
+      "event": "node_complete",
+      "elapsed_ms": 0,
+      "data": {
+        "status": "success",
+        "outputs": {},
+        "duration_ms": 0,
+        "retry_count": 0
+      }
+    },
+    {
+      "timestamp": "2026-04-24T12:41:37.943897",
+      "trace_id": "8dfd668c-1d3b-46b4-b4ed-231b4a008acd",
+      "node_id": "API_CHECK_CONDITION",
+      "event": "node_complete",
+      "elapsed_ms": 0,
+      "data": {
+        "status": "success",
+        "outputs": {
+          "raw_response": {
+            "code": 0,
+            "data": {
+              "conditionDescList": [
+                "非鼓励层",
+                "工时内",
+                "非黑名单"
+              ]
+            }
+          },
+          "condition_desc_list": [
+            "非鼓励层",
+            "工时内",
+            "非黑名单"
+          ]
+        },
+        "duration_ms": 0,
+        "retry_count": 0
+      }
+    },
+    {
+      "timestamp": "2026-04-24T12:41:37.945683",
+      "trace_id": "8dfd668c-1d3b-46b4-b4ed-231b4a008acd",
+      "node_id": "API_RESOLVE_VARIABLE",
+      "event": "node_complete",
+      "elapsed_ms": 2,
+      "data": {
+        "status": "success",
+        "outputs": {
+          "raw_response": {
+            "code": 0,
+            "data": {
+              "userAccountStatusDesc": "暂未发现异常",
+              "blackReason": "",
+              "unapprovedCount": "0",
+              "suggestion": ""
+            }
+          },
+          "variable_data": {
+            "userAccountStatusDesc": "暂未发现异常",
+            "blackReason": "",
+            "unapprovedCount": "0",
+            "suggestion": ""
+          }
+        },
+        "duration_ms": 0,
+        "retry_count": 0
+      }
+    },
+    {
+      "timestamp": "2026-04-24T12:41:37.945798",
+      "trace_id": "8dfd668c-1d3b-46b4-b4ed-231b4a008acd",
+      "node_id": "CODE_USER_INFO_MERGE",
+      "event": "node_complete",
+      "elapsed_ms": 2,
+      "data": {
+        "status": "success",
+        "outputs": {
+          "user_list": []
+        },
+        "duration_ms": 0,
+        "retry_count": 0
+      }
+    },
+    {
+      "timestamp": "2026-04-24T12:41:37.945875",
+      "trace_id": "8dfd668c-1d3b-46b4-b4ed-231b4a008acd",
+      "node_id": "MEM_READ_TALK",
+      "event": "node_complete",
+      "elapsed_ms": 2,
+      "data": {
+        "status": "success",
+        "outputs": {},
+        "duration_ms": 0,
+        "retry_count": 0
+      }
+    },
+    {
+      "timestamp": "2026-04-24T12:41:37.946014",
+      "trace_id": "8dfd668c-1d3b-46b4-b4ed-231b4a008acd",
+      "node_id": "CODE_TALK_CONTEXT_PARSE",
+      "event": "node_complete",
+      "elapsed_ms": 2,
+      "data": {
+        "status": "success",
+        "outputs": {
+          "count_map": {},
+          "last_id": "",
+          "continuity_count": 0,
+          "parsed_array": []
+        },
+        "duration_ms": 0,
+        "retry_count": 0
+      }
+    },
+    {
+      "timestamp": "2026-04-24T12:41:37.946151",
+      "trace_id": "8dfd668c-1d3b-46b4-b4ed-231b4a008acd",
+      "node_id": "CODE_HUMAN_PARSE",
+      "event": "node_complete",
+      "elapsed_ms": 2,
+      "data": {
+        "status": "success",
+        "outputs": {
+          "total_count": 0,
+          "recent_count": 0
+        },
+        "duration_ms": 0,
+        "retry_count": 0
+      }
+    },
+    {
+      "timestamp": "2026-04-24T12:41:37.946263",
+      "trace_id": "8dfd668c-1d3b-46b4-b4ed-231b4a008acd",
+      "node_id": "CODE_UNPARSED_PARSE",
+      "event": "node_complete",
+      "elapsed_ms": 2,
+      "data": {
+        "status": "success",
+        "outputs": {
+          "total_count": 0,
+          "recent_count": 0
+        },
+        "duration_ms": 0,
+        "retry_count": 0
+      }
+    },
+    {
+      "timestamp": "2026-04-24T12:41:37.946332",
+      "trace_id": "8dfd668c-1d3b-46b4-b4ed-231b4a008acd",
+      "node_id": "MEM_READ_PENALTY",
+      "event": "node_complete",
+      "elapsed_ms": 2,
+      "data": {
+        "status": "success",
+        "outputs": {},
+        "duration_ms": 0,
+        "retry_count": 0
+      }
+    },
+    {
+      "timestamp": "2026-04-24T12:41:37.946624",
+      "trace_id": "8dfd668c-1d3b-46b4-b4ed-231b4a008acd",
+      "node_id": "CODE_PENALTY_PARSE",
+      "event": "node_complete",
+      "elapsed_ms": 3,
+      "data": {
+        "status": "success",
+        "outputs": {
+          "confirm_liveness_detection": 0,
+          "has_ban": 0,
+          "reject_data": ""
+        },
+        "duration_ms": 0,
+        "retry_count": 0
+      }
+    },
+    {
+      "timestamp": "2026-04-24T12:41:37.946721",
+      "trace_id": "8dfd668c-1d3b-46b4-b4ed-231b4a008acd",
+      "node_id": "IF_HAS_IMAGE",
+      "event": "node_complete",
+      "elapsed_ms": 3,
+      "data": {
+        "status": "success",
+        "outputs": {
+          "next_node": "TEXT_NO_IMAGE",
+          "matched_condition": "无图片"
+        },
+        "duration_ms": 0,
+        "retry_count": 0
+      }
+    },
+    {
+      "timestamp": "2026-04-24T12:41:37.946803",
+      "trace_id": "8dfd668c-1d3b-46b4-b4ed-231b4a008acd",
+      "node_id": "TEXT_NO_IMAGE",
+      "event": "node_complete",
+      "elapsed_ms": 3,
+      "data": {
+        "status": "success",
+        "outputs": {
+          "value": "我怎么登录不上了？"
+        },
+        "duration_ms": 0,
+        "retry_count": 0
+      }
+    },
+    {
+      "timestamp": "2026-04-24T12:41:37.946883",
+      "trace_id": "8dfd668c-1d3b-46b4-b4ed-231b4a008acd",
+      "node_id": "TEXT_MERGE_QUERY",
+      "event": "node_complete",
+      "elapsed_ms": 3,
+      "data": {
+        "status": "success",
+        "outputs": {
+          "merged": "我怎么登录不上了？"
+        },
+        "duration_ms": 0,
+        "retry_count": 0
+      }
+    },
+    {
+      "timestamp": "2026-04-24T12:41:37.947242",
+      "trace_id": "8dfd668c-1d3b-46b4-b4ed-231b4a008acd",
+      "node_id": "CODE_EXTRACT_QUERY_ENTITIES",
+      "event": "node_complete",
+      "elapsed_ms": 3,
+      "data": {
+        "status": "success",
+        "outputs": {
+          "query_entities": "{\"raw_query\": \"我怎么登录不上了？\", \"normalized_query\": \"我怎么登录不上了？\", \"chat_type\": \"business\", \"domain\": \"account\", \"intent_action\": \"login\", \"issue_type\": \"login_exception\", \"scene\": \"login\", \"error_message\": \"\", \"content_type\": \"\", \"time_expr\": \"\", \"has_question_word\": 1, \"is_insult\": 0, \"is_smalltalk\": 0, \"is_vague_business\": 0, \"confidence\": 0.88, \"matched_keywords\": [\"登录\"]}",
+          "chat_type": "business",
+          "domain": "account",
+          "issue_type": "login_exception",
+          "intent_action": "login",
+          "is_vague_business": 0
+        },
+        "duration_ms": 0,
+        "retry_count": 0
+      }
+    },
+    {
+      "timestamp": "2026-04-24T12:41:37.947358",
+      "trace_id": "8dfd668c-1d3b-46b4-b4ed-231b4a008acd",
+      "node_id": "CODE_MERGE_ENTITY_CONTEXT",
+      "event": "node_complete",
+      "elapsed_ms": 3,
+      "data": {
+        "status": "success",
+        "outputs": {
+          "entity_context": "{\"query_entities\": {\"raw_query\": \"我怎么登录不上了？\", \"normalized_query\": \"我怎么登录不上了？\", \"chat_type\": \"business\", \"domain\": \"account\", \"intent_action\": \"login\", \"issue_type\": \"login_exception\", \"scene\": \"login\", \"error_message\": \"\", \"content_type\": \"\", \"time_expr\": \"\", \"has_question_word\": 1, \"is_insult\": 0, \"is_smalltalk\": 0, \"is_vague_business\": 0, \"confidence\": 0.88, \"matched_keywords\": [\"登录\"]}, \"user_entities\": {\"user_tags\": [], \"account_status_desc\": \"\", \"black_reason\": \"\", \"has_ban\": 0, \"confirm_liveness_detection\": 0, \"unapproved_count\": 0, \"is_blacklist\": 0, \"reject_data\": \"\"}, \"resolved_domain\": \"account\"}",
+          "resolved_domain": "account"
+        },
+        "duration_ms": 0,
+        "retry_count": 0
+      }
+    },
+    {
+      "timestamp": "2026-04-24T12:41:37.947522",
+      "trace_id": "8dfd668c-1d3b-46b4-b4ed-231b4a008acd",
+      "node_id": "CODE_CHECK_SLOT_COMPLETENESS",
+      "event": "node_complete",
+      "elapsed_ms": 4,
+      "data": {
+        "status": "success",
+        "outputs": {
+          "slot_complete": 1,
+          "resolved_domain": "account",
+          "clarify_type": "",
+          "missing_slots": "[]",
+          "reason": "",
+          "suggested_reply": "",
+          "route_type": "continue",
+          "slot_check_result": "{\"slot_complete\": 1, \"resolved_domain\": \"account\", \"clarify_type\": \"\", \"missing_slots\": [], \"reason\": \"\", \"suggested_reply\": \"\", \"route_type\": \"continue\", \"query_entities\": {\"raw_query\": \"我怎么登录不上了？\", \"normalized_query\": \"我怎么登录不上了？\", \"chat_type\": \"business\", \"domain\": \"account\", \"intent_action\": \"login\", \"issue_type\": \"login_exception\", \"scene\": \"login\", \"error_message\": \"\", \"content_type\": \"\", \"time_expr\": \"\", \"has_question_word\": 1, \"is_insult\": 0, \"is_smalltalk\": 0, \"is_vague_business\": 0, \"confidence\": 0.88, \"matched_keywords\": [\"登录\"]}, \"user_entities\": {\"user_tags\": [], \"account_status_desc\": \"\", \"black_reason\": \"\", \"has_ban\": 0, \"confirm_liveness_detection\": 0, \"unapproved_count\": 0, \"is_blacklist\": 0, \"reject_data\": \"\"}}"
+        },
+        "duration_ms": 0,
+        "retry_count": 0
+      }
+    },
+    {
+      "timestamp": "2026-04-24T12:41:37.947608",
+      "trace_id": "8dfd668c-1d3b-46b4-b4ed-231b4a008acd",
+      "node_id": "IF_SLOT_ROUTE",
+      "event": "node_complete",
+      "elapsed_ms": 4,
+      "data": {
+        "status": "success",
+        "outputs": {
+          "next_node": "CODE_EXTRA_PROMPT",
+          "matched_condition": "槽位完整 -> 继续原主流程"
+        },
+        "duration_ms": 0,
+        "retry_count": 0
+      }
+    },
+    {
+      "timestamp": "2026-04-24T12:41:37.947685",
+      "trace_id": "8dfd668c-1d3b-46b4-b4ed-231b4a008acd",
+      "node_id": "CODE_EXTRA_PROMPT",
+      "event": "node_complete",
+      "elapsed_ms": 4,
+      "data": {
+        "status": "success",
+        "outputs": {
+          "extra_prompt": ""
+        },
+        "duration_ms": 0,
+        "retry_count": 0
+      }
+    },
+    {
+      "timestamp": "2026-04-24T12:41:42.273124",
+      "trace_id": "8dfd668c-1d3b-46b4-b4ed-231b4a008acd",
+      "node_id": "LLM_SEMANTIC_CHECK",
+      "event": "node_complete",
+      "elapsed_ms": 4329,
+      "data": {
+        "status": "success",
+        "outputs": {
+          "output": "1"
+        },
+        "duration_ms": 4325,
+        "retry_count": 0
+      }
+    },
+    {
+      "timestamp": "2026-04-24T12:41:46.273187",
+      "trace_id": "8dfd668c-1d3b-46b4-b4ed-231b4a008acd",
+      "node_id": "LLM_QUERY_REWRITE",
+      "event": "node_complete",
+      "elapsed_ms": 8329,
+      "data": {
+        "status": "success",
+        "outputs": {
+          "output": "我怎么登录不上了？"
+        },
+        "duration_ms": 3999,
+        "retry_count": 0
+      }
+    },
+    {
+      "timestamp": "2026-04-24T12:41:46.273869",
+      "trace_id": "8dfd668c-1d3b-46b4-b4ed-231b4a008acd",
+      "node_id": "CODE_FILL_INFO",
+      "event": "node_complete",
+      "elapsed_ms": 8330,
+      "data": {
+        "status": "success",
+        "outputs": {
+          "query_with_info": "我怎么登录不上了？",
+          "query_without_info": "我怎么登录不上了？"
+        },
+        "duration_ms": 0,
+        "retry_count": 0
+      }
+    },
+    {
+      "timestamp": "2026-04-24T12:41:49.121323",
+      "trace_id": "8dfd668c-1d3b-46b4-b4ed-231b4a008acd",
+      "node_id": "INTENT_MAIN",
+      "event": "node_complete",
+      "elapsed_ms": 11177,
+      "data": {
+        "status": "success",
+        "outputs": {
+          "classification_id": "1",
+          "_next_node": "INTENT_SECONDARY",
+          "_matched_by": "llm"
+        },
+        "duration_ms": 2846,
+        "retry_count": 0
+      }
+    },
+    {
+      "timestamp": "2026-04-24T12:41:53.536544",
+      "trace_id": "8dfd668c-1d3b-46b4-b4ed-231b4a008acd",
+      "node_id": "INTENT_SECONDARY",
+      "event": "node_complete",
+      "elapsed_ms": 15593,
+      "data": {
+        "status": "success",
+        "outputs": {
+          "classification_id": "8",
+          "_next_node": "INTENT_ACCOUNT_ABNORMAL",
+          "_matched_by": "llm"
+        },
+        "duration_ms": 4414,
+        "retry_count": 0
+      }
+    },
+    {
+      "timestamp": "2026-04-24T12:41:54.455213",
+      "trace_id": "8dfd668c-1d3b-46b4-b4ed-231b4a008acd",
+      "node_id": "INTENT_ACCOUNT_ABNORMAL",
+      "event": "node_complete",
+      "elapsed_ms": 16511,
+      "data": {
+        "status": "success",
+        "outputs": {
+          "classification_id": "-1",
+          "_next_node": "CODE_NEW_TOPIC_QUERY_MERGE",
+          "_matched_by": "llm"
+        },
+        "duration_ms": 917,
+        "retry_count": 0
+      }
+    },
+    {
+      "timestamp": "2026-04-24T12:41:54.455638",
+      "trace_id": "8dfd668c-1d3b-46b4-b4ed-231b4a008acd",
+      "node_id": "CODE_NEW_TOPIC_QUERY_MERGE",
+      "event": "node_complete",
+      "elapsed_ms": 16512,
+      "data": {
+        "status": "success",
+        "outputs": {
+          "merged_query": "我怎么登录不上了？"
+        },
+        "duration_ms": 0,
+        "retry_count": 0
+      }
+    },
+    {
+      "timestamp": "2026-04-24T12:41:58.040983",
+      "trace_id": "8dfd668c-1d3b-46b4-b4ed-231b4a008acd",
+      "node_id": "LLM_QUERY_REWRITE_NEW",
+      "event": "node_complete",
+      "elapsed_ms": 20097,
+      "data": {
+        "status": "success",
+        "outputs": {
+          "output": "登录失败"
+        },
+        "duration_ms": 3584,
+        "retry_count": 0
+      }
+    },
+    {
+      "timestamp": "2026-04-24T12:41:58.041970",
+      "trace_id": "8dfd668c-1d3b-46b4-b4ed-231b4a008acd",
+      "node_id": "KB_SEARCH_MAIN",
+      "event": "node_complete",
+      "elapsed_ms": 20098,
+      "data": {
+        "status": "success",
+        "outputs": {
+          "results": [],
+          "knowledge_list": "",
+          "knowledge_raw": "",
+          "link_map": {},
+          "question_category_ids": "",
+          "fast_transfer": 0
+        },
+        "duration_ms": 0,
+        "retry_count": 0
+      }
+    },
+    {
+      "timestamp": "2026-04-24T12:41:58.042720",
+      "trace_id": "8dfd668c-1d3b-46b4-b4ed-231b4a008acd",
+      "node_id": "CODE_KNOWLEDGE_POSTPROCESS",
+      "event": "node_complete",
+      "elapsed_ms": 20099,
+      "data": {
+        "status": "success",
+        "outputs": {
+          "knowledge_list_for_llm": "",
+          "knowledge_raw": "[]",
+          "link_map": {},
+          "question_category_ids": "",
+          "fast_transfer": 0,
+          "match_success": 0,
+          "user_info_list": []
+        },
+        "duration_ms": 0,
+        "retry_count": 0
+      }
+    },
+    {
+      "timestamp": "2026-04-24T12:41:58.043052",
+      "trace_id": "8dfd668c-1d3b-46b4-b4ed-231b4a008acd",
+      "node_id": "CODE_KNOWLEDGE_MERGE_WITH_USER",
+      "event": "node_complete",
+      "elapsed_ms": 20099,
+      "data": {
+        "status": "success",
+        "outputs": {
+          "context": "用户信息：\n\n知识库内容：\n"
+        },
+        "duration_ms": 0,
+        "retry_count": 0
+      }
+    },
+    {
+      "timestamp": "2026-04-24T12:42:17.209376",
+      "trace_id": "8dfd668c-1d3b-46b4-b4ed-231b4a008acd",
+      "node_id": "LLM_KNOWLEDGE_VALID",
+      "event": "node_complete",
+      "elapsed_ms": 39265,
+      "data": {
+        "status": "success",
+        "outputs": {
+          "output": "0"
+        },
+        "duration_ms": 19165,
+        "retry_count": 0
+      }
+    },
+    {
+      "timestamp": "2026-04-24T12:42:17.210422",
+      "trace_id": "8dfd668c-1d3b-46b4-b4ed-231b4a008acd",
+      "node_id": "IF_KNOWLEDGE_RELEVANT",
+      "event": "node_complete",
+      "elapsed_ms": 39266,
+      "data": {
+        "status": "success",
+        "outputs": {
+          "next_node": "INTENT_EMOTION_CHECK",
+          "matched_condition": "知识不相关"
+        },
+        "duration_ms": 0,
+        "retry_count": 0
+      }
+    },
+    {
+      "timestamp": "2026-04-24T12:42:21.796971",
+      "trace_id": "8dfd668c-1d3b-46b4-b4ed-231b4a008acd",
+      "node_id": "INTENT_EMOTION_CHECK",
+      "event": "node_complete",
+      "elapsed_ms": 43853,
+      "data": {
+        "status": "success",
+        "outputs": {
+          "classification_id": "-1",
+          "_next_node": "LLM_IRRELEVANT_GUIDE",
+          "_matched_by": "llm"
+        },
+        "duration_ms": 4586,
+        "retry_count": 0
+      }
+    },
+    {
+      "timestamp": "2026-04-24T12:42:31.680210",
+      "trace_id": "8dfd668c-1d3b-46b4-b4ed-231b4a008acd",
+      "node_id": "LLM_IRRELEVANT_GUIDE",
+      "event": "node_complete",
+      "elapsed_ms": 53736,
+      "data": {
+        "status": "success",
+        "outputs": {
+          "output": "抱歉给创作者大人带来不便，理解您着急的心情！您可以尝试清理缓存或切换网络，也可以换个角度描述下具体的报错提示，小百再帮您看看哦！"
+        },
+        "duration_ms": 9881,
+        "retry_count": 0
+      }
+    },
+    {
+      "timestamp": "2026-04-24T12:42:31.681967",
+      "trace_id": "8dfd668c-1d3b-46b4-b4ed-231b4a008acd",
+      "node_id": "PHASE_POSTPROCESS",
+      "event": "node_complete",
+      "elapsed_ms": 53738,
+      "data": {
+        "status": "success",
+        "outputs": {},
+        "duration_ms": 0,
+        "retry_count": 0
+      }
+    },
+    {
+      "timestamp": "2026-04-24T12:42:31.682993",
+      "trace_id": "8dfd668c-1d3b-46b4-b4ed-231b4a008acd",
+      "node_id": "CODE_CONTEXT_UPDATE",
+      "event": "node_complete",
+      "elapsed_ms": 53739,
+      "data": {
+        "status": "success",
+        "outputs": {
+          "new_talk_context": "[{\"intentionId\": \"1\", \"secondaryIntentionId\": \"\", \"classificationId\": \"-1\", \"timestamp\": \"2026-04-24T12:42:31.682703\"}]"
+        },
+        "duration_ms": 0,
+        "retry_count": 0
+      }
+    },
+    {
+      "timestamp": "2026-04-24T12:42:31.683380",
+      "trace_id": "8dfd668c-1d3b-46b4-b4ed-231b4a008acd",
+      "node_id": "CODE_PENALTY_CONTEXT_UPDATE",
+      "event": "node_complete",
+      "elapsed_ms": 53739,
+      "data": {
+        "status": "success",
+        "outputs": {
+          "new_penalty_context": "{}"
+        },
+        "duration_ms": 0,
+        "retry_count": 0
+      }
+    },
+    {
+      "timestamp": "2026-04-24T12:42:31.683582",
+      "trace_id": "8dfd668c-1d3b-46b4-b4ed-231b4a008acd",
+      "node_id": "MEM_WRITE_TALK",
+      "event": "node_complete",
+      "elapsed_ms": 53740,
+      "data": {
+        "status": "success",
+        "outputs": {},
+        "duration_ms": 0,
+        "retry_count": 0
+      }
+    },
+    {
+      "timestamp": "2026-04-24T12:42:31.683975",
+      "trace_id": "8dfd668c-1d3b-46b4-b4ed-231b4a008acd",
+      "node_id": "OUTPUT_FINAL",
+      "event": "node_complete",
+      "elapsed_ms": 53740,
+      "data": {
+        "status": "success",
+        "outputs": {
+          "template_output": "抱歉给创作者大人带来不便，理解您着急的心情！您可以尝试清理缓存或切换网络，也可以换个角度描述下具体的报错提示，小百再帮您看看哦！",
+          "message_type": "{{message_type}}"
+        },
+        "duration_ms": 0,
+        "retry_count": 0
+      }
+    },
+    {
+      "timestamp": "2026-04-24T12:42:31.684215",
+      "trace_id": "8dfd668c-1d3b-46b4-b4ed-231b4a008acd",
+      "node_id": "END",
+      "event": "node_complete",
+      "elapsed_ms": 53740,
+      "data": {
+        "status": "success",
+        "outputs": {},
+        "duration_ms": 0,
+        "retry_count": 0
+      }
+    },
+    {
+      "timestamp": "2026-04-24T12:42:31.684400",
+      "trace_id": "8dfd668c-1d3b-46b4-b4ed-231b4a008acd",
+      "node_id": "MEM_WRITE_PENALTY",
+      "event": "node_complete",
+      "elapsed_ms": 53740,
+      "data": {
+        "status": "success",
+        "outputs": {},
+        "duration_ms": 0,
+        "retry_count": 0
+      }
+    },
+    {
+      "timestamp": "2026-04-24T12:42:31.684797",
+      "trace_id": "8dfd668c-1d3b-46b4-b4ed-231b4a008acd",
+      "node_id": "",
+      "event": "scenario_complete",
+      "elapsed_ms": 53741,
+      "data": {
+        "nodes_executed": 40,
+        "duration_ms": 53741
+      }
+    }
+  ],
+  "success": true
+}
