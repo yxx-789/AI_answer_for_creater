@@ -1,12 +1,12 @@
 """
 AI客服运营平台 - 配置文件
 """
-
 import os
 from pathlib import Path
 
-# 项目根目录（硬编码路径）
-ROOT_DIR = Path("/Users/xingyao/Desktop/ai-customer-service-platform-v2")
+# 动态获取项目根目录（重点修改了这一行！兼容本地和云端）
+# __file__ 指向当前 config.py 文件，向上退两级（.parent.parent）刚好是项目根目录
+ROOT_DIR = Path(__file__).resolve().parent.parent
 
 # 平台配置
 PLATFORM_NAME = "AI客服运营平台"
@@ -15,7 +15,7 @@ VERSION = "2.0.0"
 # 数据库配置
 DATABASE_URL = os.getenv("DATABASE_URL", f"sqlite:///{ROOT_DIR}/data/platform.db")
 
-# 数据目录（绝对路径）
+# 数据目录（基于动态根目录）
 SCENARIOS_DIR = ROOT_DIR / "data" / "scenarios"
 KNOWLEDGE_DIR = ROOT_DIR / "data" / "knowledge"
 TRACES_DIR = ROOT_DIR / "data" / "traces"
