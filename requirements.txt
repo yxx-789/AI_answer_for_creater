@@ -16,3 +16,7 @@ pandas>=2.1
 
 # 其他工具
 python-dotenv>=1.0
+
+streamlit
+httpx
+PyYAML
